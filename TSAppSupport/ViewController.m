@@ -7,6 +7,10 @@
 //
 
 #import "ViewController.h"
+#import "TSAppSupportSingleton.h"
+#import "TSAppHTMLMessageController.h"
+
+#define API_URL @"http://appsupport.apiary.io/"
 
 @interface ViewController ()
 
@@ -17,7 +21,17 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-	// Do any additional setup after loading the view, typically from a nib.
+
+
+    [[TSAppSupportSingleton sharedInstance] setAppUrl:API_URL];
+    [[TSAppSupportSingleton sharedInstance] launchWithAppId:@"FJAIDSOFJDOFID"];
+    [[TSAppSupportSingleton sharedInstance].appSupportDelagate addDelegate: self delegateQueue:dispatch_get_main_queue()];
+}
+
+- (void)messageType:(NSString *)messageType withParams:(NSDictionary *)params {
+    TSAppHTMLMessageController *messageController = [[TSAppHTMLMessageController alloc] init];
+    messageController.messageParams = params;
+    [self presentModalViewController:messageController animated:YES];
 }
 
 - (void)didReceiveMemoryWarning

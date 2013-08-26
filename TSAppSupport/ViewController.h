@@ -7,7 +7,8 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "TSAppSupportSingleton.h"
 
-@interface ViewController : UIViewController
+@interface ViewController : UIViewController<TSAppSupportDelegate>
 
 @end

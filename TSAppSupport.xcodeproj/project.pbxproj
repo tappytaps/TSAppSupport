@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		6F6F141FEA5A6A2CA0AB9F02 /* TSAppSupportSingleton.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F6F1576B75E47902CF86106 /* TSAppSupportSingleton.m */; };
+		6F6F1E567EF9108BDDAF48D8 /* TSAppHTMLMessageController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F6F1E956FCFAEAAC78EF005 /* TSAppHTMLMessageController.m */; };
+		7C28EC798F4B4AF6A7BCFD38 /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 51A202E5170A48C2B02AC71B /* libPods.a */; };
 		E7C6575017CB5719001B80D2 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E7C6574F17CB5719001B80D2 /* UIKit.framework */; };
 		E7C6575217CB5719001B80D2 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E7C6575117CB5719001B80D2 /* Foundation.framework */; };
 		E7C6575417CB5719001B80D2 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E7C6575317CB5719001B80D2 /* CoreGraphics.framework */; };
@@ -22,6 +25,12 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		51A202E5170A48C2B02AC71B /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		6F6F10090C78DE026A2BBA41 /* TSAppHTMLMessageController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TSAppHTMLMessageController.h; sourceTree = "<group>"; };
+		6F6F1576B75E47902CF86106 /* TSAppSupportSingleton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TSAppSupportSingleton.m; sourceTree = "<group>"; };
+		6F6F1CD51D64E9493EFF67CD /* TSAppSupportSingleton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TSAppSupportSingleton.h; sourceTree = "<group>"; };
+		6F6F1E956FCFAEAAC78EF005 /* TSAppHTMLMessageController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TSAppHTMLMessageController.m; sourceTree = "<group>"; };
+		CC58C85295034B22ADB1B727 /* Pods.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.xcconfig; path = Pods/Pods.xcconfig; sourceTree = SOURCE_ROOT; };
 		E7C6574C17CB5719001B80D2 /* TSAppSupport.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TSAppSupport.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E7C6574F17CB5719001B80D2 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		E7C6575117CB5719001B80D2 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -49,18 +58,31 @@
 				E7C6575017CB5719001B80D2 /* UIKit.framework in Frameworks */,
 				E7C6575217CB5719001B80D2 /* Foundation.framework in Frameworks */,
 				E7C6575417CB5719001B80D2 /* CoreGraphics.framework in Frameworks */,
+				7C28EC798F4B4AF6A7BCFD38 /* libPods.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		6F6F193B5547254045D1BA1F /* Framework */ = {
+			isa = PBXGroup;
+			children = (
+				6F6F1576B75E47902CF86106 /* TSAppSupportSingleton.m */,
+				6F6F1CD51D64E9493EFF67CD /* TSAppSupportSingleton.h */,
+				6F6F1E956FCFAEAAC78EF005 /* TSAppHTMLMessageController.m */,
+				6F6F10090C78DE026A2BBA41 /* TSAppHTMLMessageController.h */,
+			);
+			path = Framework;
+			sourceTree = "<group>";
+		};
 		E7C6574317CB5719001B80D2 = {
 			isa = PBXGroup;
 			children = (
 				E7C6575517CB5719001B80D2 /* TSAppSupport */,
 				E7C6574E17CB5719001B80D2 /* Frameworks */,
 				E7C6574D17CB5719001B80D2 /* Products */,
+				CC58C85295034B22ADB1B727 /* Pods.xcconfig */,
 			);
 			sourceTree = "<group>";
 		};
@@ -78,6 +100,7 @@
 				E7C6574F17CB5719001B80D2 /* UIKit.framework */,
 				E7C6575117CB5719001B80D2 /* Foundation.framework */,
 				E7C6575317CB5719001B80D2 /* CoreGraphics.framework */,
+				51A202E5170A48C2B02AC71B /* libPods.a */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -92,6 +115,7 @@
 				E7C6576A17CB5719001B80D2 /* ViewController_iPhone.xib */,
 				E7C6576D17CB5719001B80D2 /* ViewController_iPad.xib */,
 				E7C6575617CB5719001B80D2 /* Supporting Files */,
+				6F6F193B5547254045D1BA1F /* Framework */,
 			);
 			path = TSAppSupport;
 			sourceTree = "<group>";
@@ -117,9 +141,11 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = E7C6577217CB5719001B80D2 /* Build configuration list for PBXNativeTarget "TSAppSupport" */;
 			buildPhases = (
+				82F8BD9F0DA94AA2A1551239 /* Check Pods Manifest.lock */,
 				E7C6574817CB5719001B80D2 /* Sources */,
 				E7C6574917CB5719001B80D2 /* Frameworks */,
 				E7C6574A17CB5719001B80D2 /* Resources */,
+				59F87EAB3387473CB7CF29FB /* Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -149,6 +175,8 @@
 			mainGroup = E7C6574317CB5719001B80D2;
 			productRefGroup = E7C6574D17CB5719001B80D2 /* Products */;
 			projectDirPath = "";
+			projectReferences = (
+			);
 			projectRoot = "";
 			targets = (
 				E7C6574B17CB5719001B80D2 /* TSAppSupport */,
@@ -172,6 +200,39 @@
 		};
 /* End PBXResourcesBuildPhase section */
 
+/* Begin PBXShellScriptBuildPhase section */
+		59F87EAB3387473CB7CF29FB /* Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Pods-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		82F8BD9F0DA94AA2A1551239 /* Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Check Pods Manifest.lock";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
 		E7C6574817CB5719001B80D2 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
@@ -180,6 +241,8 @@
 				E7C6575C17CB5719001B80D2 /* main.m in Sources */,
 				E7C6576017CB5719001B80D2 /* AppDelegate.m in Sources */,
 				E7C6576917CB5719001B80D2 /* ViewController.m in Sources */,
+				6F6F141FEA5A6A2CA0AB9F02 /* TSAppSupportSingleton.m in Sources */,
+				6F6F1E567EF9108BDDAF48D8 /* TSAppHTMLMessageController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -273,22 +336,26 @@
 		};
 		E7C6577317CB5719001B80D2 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = CC58C85295034B22ADB1B727 /* Pods.xcconfig */;
 			buildSettings = {
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "TSAppSupport/TSAppSupport-Prefix.pch";
 				INFOPLIST_FILE = "TSAppSupport/TSAppSupport-Info.plist";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				USER_HEADER_SEARCH_PATHS = "\"${PROJECT_DIR}/Pods\"/**";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
 		};
 		E7C6577417CB5719001B80D2 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = CC58C85295034B22ADB1B727 /* Pods.xcconfig */;
 			buildSettings = {
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "TSAppSupport/TSAppSupport-Prefix.pch";
 				INFOPLIST_FILE = "TSAppSupport/TSAppSupport-Info.plist";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				USER_HEADER_SEARCH_PATHS = "\"${PROJECT_DIR}/Pods\"/**";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;
