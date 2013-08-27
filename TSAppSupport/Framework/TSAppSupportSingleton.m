@@ -14,6 +14,7 @@
 #include <sys/sysctl.h>
 
 #define LIB_VERSION 1
+#define API_URL @"http://appsupport.apiary.io"
 
 
 @implementation TSAppSupportSingleton {
@@ -46,6 +47,7 @@
     self = [super init];
     if (self) {
         self.appSupportDelagate = (GCDMulticastDelegate <TSAppSupportDelegate> *)[[GCDMulticastDelegate alloc] init];
+        [self setAppUrl:API_URL];
     }
     return self;
 }
@@ -93,6 +95,7 @@
 
 
 -(void)markMessageAsRead:(NSString *)messageId {
+    assert(webClient);
     NSMutableDictionary *params = [self messageHeader];
     params[@"messageId"] = messageId;
     [webClient postPath:@"/messageReaded" parameters:params success:^(AFHTTPRequestOperation *operation, id responseObject) {
@@ -101,6 +104,7 @@
 }
 
 -(void)checkMaintananceMode:(TSMaintananceResultBlock)resultBlock {
+    assert(webClient);
     [webClient postPath:@"/maintenance" parameters: [self messageHeader] success:^(AFHTTPRequestOperation *operation, id responseObject) {
         NSDictionary *ret = responseObject;
         if ([ret[@"maintenance"] isEqualToString:@"yes"]) {
@@ -121,6 +125,7 @@
 }
 
 -(void)loadNewMessageFromServer {
+    assert(webClient);
     if ([self getUniqueIdentifier]) {
         NSMutableDictionary *launchParams = [self userStateDictionary];
         [launchParams addEntriesFromDictionary:[self messageHeader]];
