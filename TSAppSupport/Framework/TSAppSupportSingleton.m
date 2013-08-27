@@ -94,6 +94,7 @@
 }
 
 
+
 -(void)markMessageAsRead:(NSString *)messageId {
     assert(webClient);
     [self.appSupportDelagate didReadMessage:messageId];
@@ -134,7 +135,7 @@
         [webClient postPath:@"/appLaunched" parameters:launchParams success:^(AFHTTPRequestOperation *operation, id responseObject) {
             NSLog(@"Success!");
             NSDictionary *responseDictionary = responseObject;
-            if (responseDictionary != nil && ![responseDictionary[@"type"] isEqual:@"none"]) {
+            if (responseDictionary != nil) {
                 self.currentMessage = responseDictionary;
                 [self.appSupportDelagate messageType:responseDictionary[@"type"] withParams:responseDictionary[@"params"]];
             }
