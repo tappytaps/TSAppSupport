@@ -26,7 +26,7 @@
     if ([[UIDevice currentDevice] respondsToSelector:@selector(identifierForVendor)]) {
         return [[[UIDevice currentDevice] identifierForVendor] UUIDString];
     } else {
-        return nil;
+        return @"<iOS6";
     }
 }
 
@@ -101,7 +101,7 @@
 }
 
 -(void)checkMaintananceMode:(TSMaintananceResultBlock)resultBlock {
-    [webClient getPath:@"/maintenance" parameters:nil success:^(AFHTTPRequestOperation *operation, id responseObject) {
+    [webClient postPath:@"/maintenance" parameters: [self messageHeader] success:^(AFHTTPRequestOperation *operation, id responseObject) {
         NSDictionary *ret = responseObject;
         if ([ret[@"maintenance"] isEqualToString:@"yes"]) {
             resultBlock(YES, ret[@"message"]);
@@ -116,11 +116,15 @@
 }
 
 -(void)launchWithAppId:(NSString *)appId additionalVariables:(NSDictionary *)additional {
+    self.additionalParams = additional;
+    _appId = appId;
+}
+
+-(void)loadNewMessageFromServer {
     if ([self getUniqueIdentifier]) {
-        _appId = appId;
         NSMutableDictionary *launchParams = [self userStateDictionary];
         [launchParams addEntriesFromDictionary:[self messageHeader]];
-        [launchParams addEntriesFromDictionary:additional];
+        [launchParams addEntriesFromDictionary:self.additionalParams];
         [webClient postPath:@"/appLaunched" parameters:launchParams success:^(AFHTTPRequestOperation *operation, id responseObject) {
             NSLog(@"Success!");
             NSDictionary *responseDictionary = responseObject;
@@ -133,6 +137,7 @@
         }];
     } else {
         // don't do anything - old iOS version
+        // messages not supported on <iOS6
     }
 }
 

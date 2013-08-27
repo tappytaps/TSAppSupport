@@ -22,6 +22,8 @@ typedef void (^TSMaintananceResultBlock)(BOOL, NSString *);
 
 - (void)launchWithAppId:(NSString *)appId additionalVariables:(NSDictionary *)additional;
 
+- (void)loadNewMessageFromServer;
+
 - (void)launchWithAppId:(NSString *)appId;
 
 - (void)markMessageAsRead:(NSString *)messageId;
@@ -32,4 +34,5 @@ typedef void (^TSMaintananceResultBlock)(BOOL, NSString *);
 @property NSString *appUrl;
 
 @property(nonatomic, strong) NSDictionary *currentMessage;
+@property(nonatomic, strong) NSDictionary *additionalParams;
 @end

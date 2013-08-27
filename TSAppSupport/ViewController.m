@@ -30,6 +30,7 @@
         NSLog(@"Is in maintanance: %i", b);
         NSLog(@"Message: %@", string);
     }];
+    [[TSAppSupportSingleton sharedInstance] loadNewMessageFromServer];
 }
 
 - (void)messageType:(NSString *)messageType withParams:(NSDictionary *)params {
