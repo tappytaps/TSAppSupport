@@ -15,6 +15,7 @@ typedef void (^TSMaintananceResultBlock)(BOOL, NSString *);
 
 @protocol TSAppSupportDelegate
     -(void)messageType:(NSString *)messageType withParams:(NSDictionary *)params;
+    -(void)didReadMessage:(NSString *)messageId;
 @end
 
 @interface TSAppSupportSingleton : NSObject

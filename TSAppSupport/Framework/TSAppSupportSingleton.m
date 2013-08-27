@@ -96,6 +96,7 @@
 
 -(void)markMessageAsRead:(NSString *)messageId {
     assert(webClient);
+    [self.appSupportDelagate didReadMessage:messageId];
     NSMutableDictionary *params = [self messageHeader];
     params[@"messageId"] = messageId;
     [webClient postPath:@"/messageReaded" parameters:params success:^(AFHTTPRequestOperation *operation, id responseObject) {
