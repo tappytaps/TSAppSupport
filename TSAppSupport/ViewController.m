@@ -26,6 +26,10 @@
     [[TSAppSupportSingleton sharedInstance] setAppUrl:API_URL];
     [[TSAppSupportSingleton sharedInstance] launchWithAppId:@"FJAIDSOFJDOFID"];
     [[TSAppSupportSingleton sharedInstance].appSupportDelagate addDelegate: self delegateQueue:dispatch_get_main_queue()];
+    [[TSAppSupportSingleton sharedInstance] checkMaintananceMode:^(BOOL b, NSString *string) {
+        NSLog(@"Is in maintanance: %i", b);
+        NSLog(@"Message: %@", string);
+    }];
 }
 
 - (void)messageType:(NSString *)messageType withParams:(NSDictionary *)params {

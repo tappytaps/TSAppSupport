@@ -100,6 +100,21 @@
     }];
 }
 
+-(void)checkMaintananceMode:(TSMaintananceResultBlock)resultBlock {
+    [webClient getPath:@"/maintenance" parameters:nil success:^(AFHTTPRequestOperation *operation, id responseObject) {
+        NSDictionary *ret = responseObject;
+        if ([ret[@"maintenance"] isEqualToString:@"yes"]) {
+            resultBlock(YES, ret[@"message"]);
+        } else {
+            resultBlock(NO, @"");
+        }
+    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+        NSLog(@"Error %@", error);
+        resultBlock(NO, @"");
+    }
+    ];
+}
+
 -(void)launchWithAppId:(NSString *)appId additionalVariables:(NSDictionary *)additional {
     if ([self getUniqueIdentifier]) {
         _appId = appId;
@@ -109,9 +124,11 @@
         [webClient postPath:@"/appLaunched" parameters:launchParams success:^(AFHTTPRequestOperation *operation, id responseObject) {
             NSLog(@"Success!");
             NSDictionary *responseDictionary = responseObject;
-            [self.appSupportDelagate messageType:responseDictionary[@"type"] withParams:responseDictionary[@"params"]];
+            if (responseDictionary != nil && ![responseDictionary[@"type"] isEqual:@"none"]) {
+                self.currentMessage = responseDictionary;
+                [self.appSupportDelagate messageType:responseDictionary[@"type"] withParams:responseDictionary[@"params"]];
+            }
         } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-
             NSLog(@"Fail! %@", [error description]);
         }];
     } else {
