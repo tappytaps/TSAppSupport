@@ -9,6 +9,7 @@
 #import "ViewController.h"
 #import "TSAppSupportSingleton.h"
 #import "TSAppHTMLMessageController.h"
+#import "TSRemoteSettings.h"
 
 #define API_URL @"http://appsupport.apiary.io/"
 
@@ -29,6 +30,15 @@
         NSLog(@"Message: %@", string);
     }];
     [[TSAppSupportSingleton sharedInstance] loadNewMessageFromServer];
+
+    // server settings test
+    [[TSRemoteSettings sharedInstance] setAppUrl:@"https://babyam.tappytaps.com"];
+    [[TSRemoteSettings sharedInstance] setUrlString:@"/baby3gsettings.json"];
+    [[TSRemoteSettings sharedInstance] reloadAndCallAfter:^(BOOL b) {
+        NSLog(@"Loaded? %i, Content of settings: %@",b,((TSRemoteSettings *) [TSRemoteSettings sharedInstance]).settings);
+    }];
+
+
 }
 
 - (void)messageType:(NSString *)messageType withParams:(NSDictionary *)params {

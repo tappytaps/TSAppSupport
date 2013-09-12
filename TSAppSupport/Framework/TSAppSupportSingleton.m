@@ -10,6 +10,7 @@
 #import "AFHTTPClient.h"
 #import "GCDMulticastDelegate.h"
 #import "AFJSONRequestOperation.h"
+#import "JSONWebClient.h"
 #include <sys/types.h>
 #include <sys/sysctl.h>
 
@@ -54,10 +55,12 @@
 
 - (void)setAppUrl:(NSString *)appUrl {
     _appUrl = appUrl;
-    webClient = [[AFHTTPClient alloc] initWithBaseURL:[NSURL URLWithString:self.appUrl]];
+    webClient = [[JSONWebClient alloc] initWithBaseURL:[NSURL URLWithString:self.appUrl]];
+/*
     [webClient setParameterEncoding:AFJSONParameterEncoding];
     [webClient setDefaultHeader:@"Accept" value:@"application/json"];
     [webClient registerHTTPOperationClass:[AFJSONRequestOperation class]];
+*/
 }
 
 
