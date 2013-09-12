@@ -18,7 +18,7 @@
 
 - (BOOL)bKey:(NSString *)name default:(BOOL)deflt;
 
-+(id)sharedInstance;
++(TSRemoteSettings*)sharedInstance;
 
 
 @property NSString *appUrl;
