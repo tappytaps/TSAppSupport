@@ -20,7 +20,6 @@
 
 +(TSRemoteSettings*)sharedInstance;
 
-
 @property NSString *appUrl;
 
 @end
