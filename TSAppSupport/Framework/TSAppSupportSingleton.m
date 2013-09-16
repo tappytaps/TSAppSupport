@@ -15,7 +15,7 @@
 #include <sys/sysctl.h>
 
 #define LIB_VERSION 1
-#define API_URL @"http://appsupport.apiary.io"
+#define API_URL @"http://appsupport.tappytaps.com"
 
 
 @implementation TSAppSupportSingleton {
