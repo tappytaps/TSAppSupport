@@ -16,6 +16,7 @@
 
 #define LIB_VERSION 1
 #define API_URL @"http://appsupport.tappytaps.com"
+#define EMPTY_WHEN_NULL(x) (x == nil)?[NSNull null]:x
 
 
 @implementation TSAppSupportSingleton {
@@ -78,18 +79,18 @@
 
 -(NSMutableDictionary *)userStateDictionary {
     NSMutableDictionary *toRet = [NSMutableDictionary dictionary];
-    toRet[@"version"] = [[NSBundle mainBundle] objectForInfoDictionaryKey: @"CFBundleShortVersionString"];
+    toRet[@"version"] = EMPTY_WHEN_NULL([[NSBundle mainBundle] objectForInfoDictionaryKey: @"CFBundleShortVersionString"]);
     toRet[@"libVersion"] = @LIB_VERSION;
-    toRet[@"iosVersion"] = [UIDevice currentDevice].systemVersion;
-    toRet[@"platform"] = [self platform];
-    toRet[@"lang"] =[[[NSBundle mainBundle] preferredLocalizations] objectAtIndex:0];
+    toRet[@"iosVersion"] = EMPTY_WHEN_NULL([UIDevice currentDevice].systemVersion);
+    toRet[@"platform"] = EMPTY_WHEN_NULL([self platform]);
+    toRet[@"lang"] = EMPTY_WHEN_NULL([[[NSBundle mainBundle] preferredLocalizations] objectAtIndex:0]);
     return toRet;
 }
 
 -(NSMutableDictionary *)messageHeader {
     return [NSMutableDictionary dictionaryWithDictionary:
-             @{@"vendorId": [self getUniqueIdentifier],
-             @"appId": _appId}];
+             @{@"vendorId": EMPTY_WHEN_NULL([self getUniqueIdentifier]),
+             @"appId": EMPTY_WHEN_NULL(_appId)}];
 }
 
 - (void)launchWithAppId:(NSString *)appId {
@@ -136,14 +137,12 @@
         [launchParams addEntriesFromDictionary:[self messageHeader]];
         [launchParams addEntriesFromDictionary:self.additionalParams];
         [webClient postPath:@"/appLaunched" parameters:launchParams success:^(AFHTTPRequestOperation *operation, id responseObject) {
-            NSLog(@"Success!");
             NSDictionary *responseDictionary = responseObject;
             if (responseDictionary != nil) {
                 self.currentMessage = responseDictionary;
                 [self.appSupportDelagate messageType:responseDictionary[@"type"] withParams:responseDictionary[@"params"]];
             }
         } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-            NSLog(@"Fail! %@", [error description]);
         }];
     } else {
         // don't do anything - old iOS version
