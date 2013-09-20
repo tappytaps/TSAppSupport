@@ -25,6 +25,8 @@
 }
 
 
+#if TARGET_OS_IPHONE
+
 -(NSString *)getUniqueIdentifier {
     if ([[UIDevice currentDevice] respondsToSelector:@selector(identifierForVendor)]) {
         return [[[UIDevice currentDevice] identifierForVendor] UUIDString];
@@ -32,6 +34,16 @@
         return @"<iOS6";
     }
 }
+
+#else
+
+// TODO fix this!
+-(NSString *)getUniqueIdentifier {
+    return @"mac";
+}
+
+
+#endif
 
 
 +(TSAppSupportSingleton*)sharedInstance {
