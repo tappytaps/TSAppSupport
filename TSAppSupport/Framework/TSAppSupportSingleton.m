@@ -77,7 +77,7 @@
 }
 
 
-#ifdef TARGET_OS_IPHONE
+#if TARGET_OS_IPHONE
 - (NSString *) platform
 {
     size_t size;
@@ -103,7 +103,7 @@
     toRet[@"version"] = EMPTY_WHEN_NULL([[NSBundle mainBundle] objectForInfoDictionaryKey: @"CFBundleShortVersionString"]);
     toRet[@"libVersion"] = @LIB_VERSION;
 
-#ifdef TARGET_OS_IPHONE
+#if TARGET_OS_IPHONE
     toRet[@"iosVersion"] = EMPTY_WHEN_NULL([UIDevice currentDevice].systemVersion);
 #else
     toRet[@"iosVersion"] = @"osx";
