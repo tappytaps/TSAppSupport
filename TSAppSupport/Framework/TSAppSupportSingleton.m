@@ -77,6 +77,7 @@
 }
 
 
+#ifdef TARGET_OS_IPHONE
 - (NSString *) platform
 {
     size_t size;
@@ -87,13 +88,26 @@
     free(machine);
     return platform;
 }
+#else
+- (NSString *) platform {
+    return @"mac";
+}
+
+#endif
+
+
 
 
 -(NSMutableDictionary *)userStateDictionary {
     NSMutableDictionary *toRet = [NSMutableDictionary dictionary];
     toRet[@"version"] = EMPTY_WHEN_NULL([[NSBundle mainBundle] objectForInfoDictionaryKey: @"CFBundleShortVersionString"]);
     toRet[@"libVersion"] = @LIB_VERSION;
+
+#ifdef TARGET_OS_IPHONE
     toRet[@"iosVersion"] = EMPTY_WHEN_NULL([UIDevice currentDevice].systemVersion);
+#else
+    toRet[@"iosVersion"] = @"osx";
+#endif
     toRet[@"platform"] = EMPTY_WHEN_NULL([self platform]);
     toRet[@"lang"] = EMPTY_WHEN_NULL([[[NSBundle mainBundle] preferredLocalizations] objectAtIndex:0]);
     return toRet;
