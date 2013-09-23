@@ -14,7 +14,7 @@
 #include <sys/types.h>
 #include <sys/sysctl.h>
 
-#define LIB_VERSION 1
+#define LIB_VERSION 2
 #define API_URL @"http://appsupport.tappytaps.com"
 #define EMPTY_WHEN_NULL(x) (x == nil)?[NSNull null]:x
 
@@ -37,9 +37,23 @@
 
 #else
 
-// TODO fix this!
+
 -(NSString *)getUniqueIdentifier {
-    return @"mac";
+    io_service_t    platformExpert = IOServiceGetMatchingService(kIOMasterPortDefault,
+    IOServiceMatching("IOPlatformExpertDevice"));
+    CFStringRef serialNumberAsCFString = NULL;
+    if (platformExpert) {
+        serialNumberAsCFString = IORegistryEntryCreateCFProperty(platformExpert,
+        CFSTR(kIOPlatformSerialNumberKey),
+        kCFAllocatorDefault, 0);
+        IOObjectRelease(platformExpert);
+    }
+    NSString *serialNumberAsNSString = nil;
+    if (serialNumberAsCFString) {
+        serialNumberAsNSString = [NSString stringWithString:(NSString *)serialNumberAsCFString];
+        CFRelease(serialNumberAsCFString);
+    }
+    return serialNumberAsNSString;
 }
 
 
@@ -90,7 +104,20 @@
 }
 #else
 - (NSString *) platform {
-    return @"mac";
+    {
+    size_t len = 0;
+    sysctlbyname("hw.model", NULL, &len, NULL, 0);
+
+    if (len)
+    {
+        char *model = malloc(len*sizeof(char));
+        sysctlbyname("hw.model", model, &len, NULL, 0);
+        NSString *model_ns = [NSString stringWithUTF8String:model];
+        free(model);
+        return model_ns;
+    }
+
+    return @"unknown model"; //incase model name can't be read
 }
 
 #endif
@@ -104,9 +131,9 @@
     toRet[@"libVersion"] = @LIB_VERSION;
 
 #if TARGET_OS_IPHONE
-    toRet[@"iosVersion"] = EMPTY_WHEN_NULL([UIDevice currentDevice].systemVersion);
+    toRet[@"osVersion"] = EMPTY_WHEN_NULL([UIDevice currentDevice].systemVersion);
 #else
-    toRet[@"iosVersion"] = @"osx";
+    toRet[@"osVersion"] = [[NSProcessInfo processInfo] operatingSystemVersionString];
 #endif
     toRet[@"platform"] = EMPTY_WHEN_NULL([self platform]);
     toRet[@"lang"] = EMPTY_WHEN_NULL([[[NSBundle mainBundle] preferredLocalizations] objectAtIndex:0]);
