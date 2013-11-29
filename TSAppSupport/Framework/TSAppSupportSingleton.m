@@ -13,15 +13,19 @@
 #import "JSONWebClient.h"
 #include <sys/types.h>
 #include <sys/sysctl.h>
+#import "AdSupport/ASIdentifierManager.h"
 
 #define LIB_VERSION 2
 #define API_URL @"http://appsupport.tappytaps.com"
 #define EMPTY_WHEN_NULL(x) (x == nil)?[NSNull null]:x
 
 
+#define UPDATE_MESSAGES_EVERY 3600 * 8
+
 @implementation TSAppSupportSingleton {
     NSString *_appId;
     AFHTTPClient *webClient;
+    NSTimeInterval latestMessagesDownload;
 }
 
 
@@ -33,6 +37,19 @@
     } else {
         return @"<iOS6";
     }
+}
+
+-(NSString *)getGlobalIdentifier {
+    if ([[UIDevice currentDevice] respondsToSelector:@selector(identifierForVendor)]) {
+        return [[[ASIdentifierManager sharedManager] advertisingIdentifier] UUIDString];
+    } else {
+        return @"<iOS6";
+    }
+}
+
+
+-(BOOL)supportsUniqueIdentifier {
+    return  [[UIDevice currentDevice] respondsToSelector:@selector(identifierForVendor)];
 }
 
 #else
@@ -76,6 +93,7 @@
     if (self) {
         self.appSupportDelagate = (GCDMulticastDelegate <TSAppSupportDelegate> *)[[GCDMulticastDelegate alloc] init];
         [self setAppUrl:API_URL];
+        latestMessagesDownload = 0;
     }
     return self;
 }
@@ -83,11 +101,6 @@
 - (void)setAppUrl:(NSString *)appUrl {
     _appUrl = appUrl;
     webClient = [[JSONWebClient alloc] initWithBaseURL:[NSURL URLWithString:self.appUrl]];
-/*
-    [webClient setParameterEncoding:AFJSONParameterEncoding];
-    [webClient setDefaultHeader:@"Accept" value:@"application/json"];
-    [webClient registerHTTPOperationClass:[AFJSONRequestOperation class]];
-*/
 }
 
 
@@ -143,6 +156,7 @@
 -(NSMutableDictionary *)messageHeader {
     return [NSMutableDictionary dictionaryWithDictionary:
              @{@"vendorId": EMPTY_WHEN_NULL([self getUniqueIdentifier]),
+             @"globalId": EMPTY_WHEN_NULL([self getGlobalIdentifier]),
              @"appId": EMPTY_WHEN_NULL(_appId)}];
 }
 
@@ -154,6 +168,7 @@
 
 -(void)markMessageAsRead:(NSString *)messageId {
     assert(webClient);
+    self.currentMessage = nil;
     [self.appSupportDelagate didReadMessage:messageId];
     NSMutableDictionary *params = [self messageHeader];
     params[@"messageId"] = messageId;
@@ -183,17 +198,30 @@
     _appId = appId;
 }
 
+
+-(void)cachedLoadNewMessages {
+    NSTimeInterval now = [NSDate timeIntervalSinceReferenceDate];
+    if (((now - latestMessagesDownload) < UPDATE_MESSAGES_EVERY) && (self.currentMessage != nil)) {
+        [self.appSupportDelagate messageType:self.currentMessage[@"type"] withParams:self.currentMessage[@"params"]];
+    } else{
+        [self loadNewMessageFromServer];
+    }
+}
+
+
+
 -(void)loadNewMessageFromServer {
     assert(webClient);
-    if ([self getUniqueIdentifier]) {
+    if ([self supportsUniqueIdentifier]) {
         NSMutableDictionary *launchParams = [self userStateDictionary];
         [launchParams addEntriesFromDictionary:[self messageHeader]];
         [launchParams addEntriesFromDictionary:self.additionalParams];
         [webClient postPath:@"/appLaunched" parameters:launchParams success:^(AFHTTPRequestOperation *operation, id responseObject) {
             NSDictionary *responseDictionary = responseObject;
             if (responseDictionary != nil) {
+                latestMessagesDownload = [NSDate timeIntervalSinceReferenceDate];
                 self.currentMessage = responseDictionary;
-                [self.appSupportDelagate messageType:responseDictionary[@"type"] withParams:responseDictionary[@"params"]];
+                [self.appSupportDelagate messageType:self.currentMessage[@"type"] withParams:self.currentMessage[@"params"]];
             }
         } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
         }];

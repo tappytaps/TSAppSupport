@@ -19,9 +19,13 @@ typedef void (^TSMaintananceResultBlock)(BOOL, NSString *);
 @end
 
 @interface TSAppSupportSingleton : NSObject
+- (BOOL)supportsUniqueIdentifier;
+
 +(TSAppSupportSingleton*)sharedInstance;
 
 - (void)launchWithAppId:(NSString *)appId additionalVariables:(NSDictionary *)additional;
+
+- (void)cachedLoadNewMessages;
 
 - (void)loadNewMessageFromServer;
 
