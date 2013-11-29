@@ -20,7 +20,7 @@
 #define EMPTY_WHEN_NULL(x) (x == nil)?[NSNull null]:x
 
 
-#define UPDATE_MESSAGES_EVERY 3600 * 8
+#define UPDATE_MESSAGES_EVERY 3600.0 * 0.25
 
 @implementation TSAppSupportSingleton {
     NSString *_appId;
@@ -33,7 +33,12 @@
 
 -(NSString *)getUniqueIdentifier {
     if ([[UIDevice currentDevice] respondsToSelector:@selector(identifierForVendor)]) {
-        return [[[UIDevice currentDevice] identifierForVendor] UUIDString];
+        NSUUID *uuid = [[UIDevice currentDevice] identifierForVendor];
+        if (uuid != nil) {
+            return [uuid UUIDString];
+        } else{
+            return @"unknown";
+        }
     } else {
         return @"<iOS6";
     }
@@ -41,7 +46,12 @@
 
 -(NSString *)getGlobalIdentifier {
     if ([[UIDevice currentDevice] respondsToSelector:@selector(identifierForVendor)]) {
-        return [[[ASIdentifierManager sharedManager] advertisingIdentifier] UUIDString];
+        NSUUID *uuid = [[ASIdentifierManager sharedManager] advertisingIdentifier];
+        if (uuid != nil) {
+            return [uuid UUIDString];
+        } else{
+            return @"unknown";
+        }
     } else {
         return @"<iOS6";
     }
