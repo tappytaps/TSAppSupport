@@ -198,11 +198,16 @@
     _appId = appId;
 }
 
+-(void)callDelegateForRecievedMessage:(NSDictionary *)message {
+    if ([message objectForKey:@"type"] != nil && [message objectForKey:@"params"] != nil) {
+        [self.appSupportDelagate messageType:self.currentMessage[@"type"] withParams:self.currentMessage[@"params"]];
+    }
+}
 
 -(void)cachedLoadNewMessages {
     NSTimeInterval now = [NSDate timeIntervalSinceReferenceDate];
     if (((now - latestMessagesDownload) < UPDATE_MESSAGES_EVERY) && (self.currentMessage != nil)) {
-        [self.appSupportDelagate messageType:self.currentMessage[@"type"] withParams:self.currentMessage[@"params"]];
+        [self callDelegateForRecievedMessage:self.currentMessage];
     } else{
         [self loadNewMessageFromServer];
     }
@@ -221,7 +226,7 @@
             if (responseDictionary != nil) {
                 latestMessagesDownload = [NSDate timeIntervalSinceReferenceDate];
                 self.currentMessage = responseDictionary;
-                [self.appSupportDelagate messageType:self.currentMessage[@"type"] withParams:self.currentMessage[@"params"]];
+                [self callDelegateForRecievedMessage:self.currentMessage];
             }
         } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
         }];
