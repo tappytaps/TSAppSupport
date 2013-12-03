@@ -13,8 +13,9 @@
 #import "JSONWebClient.h"
 #include <sys/types.h>
 #include <sys/sysctl.h>
+#if TARGET_OS_IPHONE
 #import "AdSupport/ASIdentifierManager.h"
-
+#endif
 #define LIB_VERSION 2
 #define API_URL @"http://appsupport.tappytaps.com"
 #define EMPTY_WHEN_NULL(x) (x == nil)?[NSNull null]:x
@@ -77,11 +78,20 @@
     }
     NSString *serialNumberAsNSString = nil;
     if (serialNumberAsCFString) {
-        serialNumberAsNSString = [NSString stringWithString:(NSString *)serialNumberAsCFString];
+        serialNumberAsNSString = [NSString stringWithString:(__bridge NSString *)serialNumberAsCFString];
         CFRelease(serialNumberAsCFString);
     }
     return serialNumberAsNSString;
 }
+
+-(NSString *)getGlobalIdentifier {
+    return [self getUniqueIdentifier];
+}
+
+-(BOOL)supportsUniqueIdentifier {
+    return ([self getUniqueIdentifier] != NULL);
+}
+
 
 
 #endif
@@ -127,7 +137,6 @@
 }
 #else
 - (NSString *) platform {
-    {
     size_t len = 0;
     sysctlbyname("hw.model", NULL, &len, NULL, 0);
 
