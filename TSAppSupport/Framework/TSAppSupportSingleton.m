@@ -15,6 +15,8 @@
 #include <sys/sysctl.h>
 #if TARGET_OS_IPHONE
 #import "AdSupport/ASIdentifierManager.h"
+#import "DDLog.h"
+
 #endif
 #define LIB_VERSION 2
 #define API_URL @"http://appsupport.tappytaps.com"
@@ -22,6 +24,8 @@
 
 
 #define UPDATE_MESSAGES_EVERY 3600.0 * 0.25
+
+static const int ddLogLevel = LOG_LEVEL_INFO;
 
 @implementation TSAppSupportSingleton {
     NSString *_appId;
@@ -186,6 +190,7 @@
 
 
 -(void)markMessageAsRead:(NSString *)messageId {
+    DDLogInfo(@"MessageReadWS: %@ was marked as read", messageId);
     assert(webClient);
     self.currentMessage = nil;
     [self.appSupportDelagate didReadMessage:messageId];
@@ -198,15 +203,18 @@
 
 -(void)checkMaintananceMode:(TSMaintananceResultBlock)resultBlock {
     assert(webClient);
+
     [webClient postPath:@"/maintenance" parameters: [self messageHeader] success:^(AFHTTPRequestOperation *operation, id responseObject) {
         NSDictionary *ret = responseObject;
         if ([ret[@"maintenance"] isEqualToString:@"yes"]) {
+            DDLogInfo(@"CheckManitananceWS: YES, %@", ret[@"message"]);
             resultBlock(YES, ret[@"message"]);
         } else {
+            DDLogInfo(@"CheckManitananceWS: NO");
             resultBlock(NO, @"");
         }
     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-        NSLog(@"Error %@", error);
+        DDLogError(@"CheckManitananceWS: err %@", [error description]);
         resultBlock(NO, @"");
     }
     ];
@@ -240,6 +248,7 @@
         NSMutableDictionary *launchParams = [self userStateDictionary];
         [launchParams addEntriesFromDictionary:[self messageHeader]];
         [launchParams addEntriesFromDictionary:self.additionalParams];
+        DDLogInfo(@"App launched WS");
         [webClient postPath:@"/appLaunched" parameters:launchParams success:^(AFHTTPRequestOperation *operation, id responseObject) {
             NSDictionary *responseDictionary = responseObject;
             if (responseDictionary != nil) {
@@ -248,6 +257,7 @@
                 [self callDelegateForRecievedMessage:self.currentMessage];
             }
         } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+            DDLogError(@"appLaunchedWS - %@", [error description]);
         }];
     } else {
         // don't do anything - old iOS version
