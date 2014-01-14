@@ -157,7 +157,7 @@ CFStringRef FileMD5HashCreateWithPath(CFStringRef filePath,
             @"user": user,
             @"files": filesJson
     };
-    [webClient postPath:@"/checkUpload" parameters:uploadJson success:^(AFHTTPRequestOperation *operation, id responseObject) {
+    [webClient postPath:@"checkUpload" parameters:uploadJson success:^(AFHTTPRequestOperation *operation, id responseObject) {
         NSDictionary *response = responseObject;
         DDLogVerbose(@"Files to upload %@", response[@"files"]);
         if (response[@"files"] != nil && [response[@"files"] count] > 0) {
@@ -165,7 +165,7 @@ CFStringRef FileMD5HashCreateWithPath(CFStringRef filePath,
             int __block filesToUpload = [response[@"files"] count];
             for (NSString  *file in response[@"files"]) {
                 NSData *fileData = [NSData dataWithContentsOfFile:filesDictionary[file]];
-                NSMutableURLRequest *request = [webClient multipartFormRequestWithMethod:@"POST" path:@"/upload" parameters: @{@"appId": appId, @"user": user} constructingBodyWithBlock: ^(id <AFMultipartFormData>formData) {
+                NSMutableURLRequest *request = [webClient multipartFormRequestWithMethod:@"POST" path:@"upload" parameters: @{@"appId": appId, @"user": user} constructingBodyWithBlock: ^(id <AFMultipartFormData>formData) {
                     [formData appendPartWithFileData:fileData name:@"fileToUpload" fileName:file mimeType:@"text/plain"];
                 }];
                 AFHTTPRequestOperation *operation = [[AFHTTPRequestOperation alloc] initWithRequest:request];
