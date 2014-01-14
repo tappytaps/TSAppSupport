@@ -11,5 +11,6 @@
 
 + (TSLogUploader *)instance;
 
-- (BOOL)uploadFilesForApp:(NSString *)appId user:(NSString *)user files:(NSArray *)files;
+- (BOOL)uploadFilesForApp:(NSString *)appId user:(NSString *)user otherParams:(NSArray *)other files:(NSArray *)files;
+
 @end

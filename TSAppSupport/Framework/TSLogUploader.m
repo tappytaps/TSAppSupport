@@ -123,7 +123,11 @@ CFStringRef FileMD5HashCreateWithPath(CFStringRef filePath,
     return _instance;
 }
 
--(BOOL)uploadFilesForApp:(NSString *)appId user:(NSString *)user files:(NSArray *)files {
+-(BOOL)uploadFilesForApp:(NSString *)appId user:(NSString *)user otherParams:(NSArray *)other files:(NSArray *)files {
+    if (other) {
+        NSString *append = [other componentsJoinedByString:@"/"];
+        appId = [NSString stringWithFormat:@"%@/%@", appId, append];
+    }
     @synchronized (self) {
         if (self.uploading) {
             return NO;
