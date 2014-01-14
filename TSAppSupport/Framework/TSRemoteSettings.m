@@ -23,15 +23,6 @@
 @synthesize settings = _settings;
 
 
-+(TSRemoteSettings*)sharedInstance {
-    static TSRemoteSettings *sharedMyInstance = nil;
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        sharedMyInstance = [[self alloc] init];
-    });
-    return sharedMyInstance;
-}
-
 - (void)setAppUrl:(NSString *)appUrl {
     _appUrl = appUrl;
     webClient = [[JSONWebClient alloc] initWithBaseURL:[NSURL URLWithString:self.appUrl]];
@@ -40,6 +31,15 @@
     [webClient setDefaultHeader:@"Accept" value:@"application/json"];
     [webClient registerHTTPOperationClass:[AFJSONRequestOperation class]];
 */
+}
+
++(TSRemoteSettings*)sharedInstance {
+    static TSRemoteSettings *sharedMyInstance = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        sharedMyInstance = [[self alloc] init];
+    });
+    return sharedMyInstance;
 }
 
 -(void)reload {

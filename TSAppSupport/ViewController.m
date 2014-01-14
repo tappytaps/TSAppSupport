@@ -10,8 +10,15 @@
 #import "TSAppSupportSingleton.h"
 #import "TSAppHTMLMessageController.h"
 #import "TSRemoteSettings.h"
+#import "TSLogUploader.h"
+#import "DDASLLogger.h"
 
 #define API_URL @"http://appsupport.apiary.io/"
+//#define LOGS_URL @"http://logsuploader.apiary.io"
+#define LOGS_URL @"http://localhost:8011/"
+
+
+
 
 @interface ViewController ()
 
@@ -22,6 +29,7 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+
     [[TSAppSupportSingleton sharedInstance] setAppUrl:API_URL];
     [[TSAppSupportSingleton sharedInstance] launchWithAppId:@"FJAIDSOFJDOFID"];
     [[TSAppSupportSingleton sharedInstance].appSupportDelagate addDelegate: self delegateQueue:dispatch_get_main_queue()];
@@ -37,6 +45,19 @@
     [[TSRemoteSettings sharedInstance] reloadAndCallAfter:^(BOOL b) {
         NSLog(@"Loaded? %i, Content of settings: %@",b,((TSRemoteSettings *) [TSRemoteSettings sharedInstance]).settings);
     }];
+
+
+    // create temp files
+    NSArray *paths = NSSearchPathForDirectoriesInDomains
+            (NSDocumentDirectory, NSUserDomainMask, YES);
+    NSString *documentsDirectory = [paths objectAtIndex:0];
+    NSString *file1Path = [NSString stringWithFormat:@"%@/test1.txt", documentsDirectory];
+    [@"pokushokus" writeToFile:file1Path atomically:YES encoding:NSUTF8StringEncoding error:nil];
+    NSString *file2Path = [NSString stringWithFormat:@"%@/test2.txt", documentsDirectory];
+    [@"hokus2" writeToFile:file2Path atomically:YES encoding:NSUTF8StringEncoding error:nil];
+    // logs test
+    [[TSLogUploader instance] setServerUrl:LOGS_URL];
+    [[TSLogUploader instance] uploadFilesForApp:@"com.tappytaps.test" user:@"sarsonj@gmail.com" files:@[file1Path, file2Path]];
 
 
 }

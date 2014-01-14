@@ -9,8 +9,10 @@
 /* Begin PBXBuildFile section */
 		6F6F141FEA5A6A2CA0AB9F02 /* TSAppSupportSingleton.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F6F1576B75E47902CF86106 /* TSAppSupportSingleton.m */; };
 		6F6F142294DB3A95C59537C6 /* JSONWebClient.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F6F10DD3D293A167A6BD60C /* JSONWebClient.m */; };
+		6F6F144A869CEDB8687C6419 /* TSLogUploader.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F6F10AE6FF95AF215A77AFE /* TSLogUploader.m */; };
 		6F6F1E567EF9108BDDAF48D8 /* TSAppHTMLMessageController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F6F1E956FCFAEAAC78EF005 /* TSAppHTMLMessageController.m */; };
 		7C28EC798F4B4AF6A7BCFD38 /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 51A202E5170A48C2B02AC71B /* libPods.a */; };
+		E71D87211885851200E0F5E6 /* AdSupport.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E71D87201885851200E0F5E6 /* AdSupport.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 		E7C6575017CB5719001B80D2 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E7C6574F17CB5719001B80D2 /* UIKit.framework */; };
 		E7C6575217CB5719001B80D2 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E7C6575117CB5719001B80D2 /* Foundation.framework */; };
 		E7C6575417CB5719001B80D2 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E7C6575317CB5719001B80D2 /* CoreGraphics.framework */; };
@@ -29,12 +31,15 @@
 /* Begin PBXFileReference section */
 		51A202E5170A48C2B02AC71B /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		6F6F10090C78DE026A2BBA41 /* TSAppHTMLMessageController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TSAppHTMLMessageController.h; sourceTree = "<group>"; };
+		6F6F10AE6FF95AF215A77AFE /* TSLogUploader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TSLogUploader.m; sourceTree = "<group>"; };
 		6F6F10DD3D293A167A6BD60C /* JSONWebClient.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JSONWebClient.m; sourceTree = "<group>"; };
 		6F6F1576B75E47902CF86106 /* TSAppSupportSingleton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TSAppSupportSingleton.m; sourceTree = "<group>"; };
 		6F6F1CD51D64E9493EFF67CD /* TSAppSupportSingleton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TSAppSupportSingleton.h; sourceTree = "<group>"; };
 		6F6F1E956FCFAEAAC78EF005 /* TSAppHTMLMessageController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TSAppHTMLMessageController.m; sourceTree = "<group>"; };
 		6F6F1EDF35648D5FAECDF2B0 /* JSONWebClient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JSONWebClient.h; sourceTree = "<group>"; };
+		6F6F1FD091AEB286B8ED54FD /* TSLogUploader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TSLogUploader.h; sourceTree = "<group>"; };
 		CC58C85295034B22ADB1B727 /* Pods.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.xcconfig; path = Pods/Pods.xcconfig; sourceTree = SOURCE_ROOT; };
+		E71D87201885851200E0F5E6 /* AdSupport.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AdSupport.framework; path = System/Library/Frameworks/AdSupport.framework; sourceTree = SDKROOT; };
 		E7C6574C17CB5719001B80D2 /* TSAppSupport.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TSAppSupport.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E7C6574F17CB5719001B80D2 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		E7C6575117CB5719001B80D2 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -61,6 +66,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E71D87211885851200E0F5E6 /* AdSupport.framework in Frameworks */,
 				E7C6575017CB5719001B80D2 /* UIKit.framework in Frameworks */,
 				E7C6575217CB5719001B80D2 /* Foundation.framework in Frameworks */,
 				E7C6575417CB5719001B80D2 /* CoreGraphics.framework in Frameworks */,
@@ -82,6 +88,8 @@
 				6F6F10090C78DE026A2BBA41 /* TSAppHTMLMessageController.h */,
 				6F6F10DD3D293A167A6BD60C /* JSONWebClient.m */,
 				6F6F1EDF35648D5FAECDF2B0 /* JSONWebClient.h */,
+				6F6F10AE6FF95AF215A77AFE /* TSLogUploader.m */,
+				6F6F1FD091AEB286B8ED54FD /* TSLogUploader.h */,
 			);
 			path = Framework;
 			sourceTree = "<group>";
@@ -107,6 +115,7 @@
 		E7C6574E17CB5719001B80D2 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				E71D87201885851200E0F5E6 /* AdSupport.framework */,
 				E7C6574F17CB5719001B80D2 /* UIKit.framework */,
 				E7C6575117CB5719001B80D2 /* Foundation.framework */,
 				E7C6575317CB5719001B80D2 /* CoreGraphics.framework */,
@@ -253,6 +262,7 @@
 				6F6F141FEA5A6A2CA0AB9F02 /* TSAppSupportSingleton.m in Sources */,
 				6F6F1E567EF9108BDDAF48D8 /* TSAppHTMLMessageController.m in Sources */,
 				6F6F142294DB3A95C59537C6 /* JSONWebClient.m in Sources */,
+				6F6F144A869CEDB8687C6419 /* TSLogUploader.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -351,6 +361,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "TSAppSupport/TSAppSupport-Prefix.pch";
 				INFOPLIST_FILE = "TSAppSupport/TSAppSupport-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				USER_HEADER_SEARCH_PATHS = "\"${PROJECT_DIR}/Pods\"/**";
 				WRAPPER_EXTENSION = app;
@@ -364,6 +375,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "TSAppSupport/TSAppSupport-Prefix.pch";
 				INFOPLIST_FILE = "TSAppSupport/TSAppSupport-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				USER_HEADER_SEARCH_PATHS = "\"${PROJECT_DIR}/Pods\"/**";
 				WRAPPER_EXTENSION = app;
