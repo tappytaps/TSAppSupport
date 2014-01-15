@@ -168,32 +168,40 @@ CFStringRef FileMD5HashCreateWithPath(CFStringRef filePath,
             // do upload
             int __block filesToUpload = [response[@"files"] count];
             for (NSString  *file in response[@"files"]) {
-                NSData *fileData = [NSData dataWithContentsOfFile:filesDictionary[file]];
-                NSMutableURLRequest *request = [webClient multipartFormRequestWithMethod:@"POST" path:@"upload" parameters: @{@"appId": appId, @"user": user} constructingBodyWithBlock: ^(id <AFMultipartFormData>formData) {
-                    [formData appendPartWithFileData:fileData name:@"fileToUpload" fileName:file mimeType:@"text/plain"];
-                }];
-                AFHTTPRequestOperation *operation = [[AFHTTPRequestOperation alloc] initWithRequest:request];
-                NSString __block *blockFile  = file;
-                [operation setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject) {
-                    DDLogVerbose(@"File uploaded: %@", blockFile);
+                NSString* filePath = filesDictionary[file];
+                NSData *fileData = [NSData dataWithContentsOfFile:filePath];
+                if (fileData != nil) {
+                    NSMutableURLRequest *request = [webClient multipartFormRequestWithMethod:@"POST" path:@"upload" parameters: @{@"appId": appId, @"user": user} constructingBodyWithBlock: ^(id <AFMultipartFormData>formData) {
+                        [formData appendPartWithFileData:fileData name:@"fileToUpload" fileName:file mimeType:@"text/plain"];
+                    }];
+                    AFHTTPRequestOperation *operation = [[AFHTTPRequestOperation alloc] initWithRequest:request];
+                    NSString __block *blockFile  = file;
+                    [operation setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject) {
+                        DDLogVerbose(@"File uploaded: %@", blockFile);
+                        @synchronized (self) {
+                            filesToUpload--;
+                            if (filesToUpload == 0) {
+                                self.uploading = NO;
+                                DDLogVerbose(@"Upload - all done");
+                            }
+                        }
+                    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+                        DDLogError(@"Upload failure: %@", [error description]);
+                        @synchronized (self) {
+                            filesToUpload--;
+                            if (filesToUpload == 0) {
+                                self.uploading = NO;
+                                DDLogVerbose(@"Upload - all done");
+                            }
+                        }
+                    }];
+                    [webClient enqueueHTTPRequestOperation:operation];
+                } else {
                     @synchronized (self) {
                         filesToUpload--;
-                        if (filesToUpload == 0) {
-                            self.uploading = NO;
-                            DDLogVerbose(@"Upload - all done");
-                        }
                     }
-                } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-                    DDLogError(@"Upload failure: %@", [error description]);
-                    @synchronized (self) {
-                        filesToUpload--;
-                        if (filesToUpload == 0) {
-                            self.uploading = NO;
-                            DDLogVerbose(@"Upload - all done");
-                        }
-                    }
-                }];
-                [webClient enqueueHTTPRequestOperation:operation];
+                }
+
             }
         }
     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {

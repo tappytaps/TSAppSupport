@@ -57,7 +57,7 @@
     [@"hokus2" writeToFile:file2Path atomically:YES encoding:NSUTF8StringEncoding error:nil];
     // logs test
     [[TSLogUploader instance] setServerUrl:LOGS_URL];
-    [[TSLogUploader instance] uploadFilesForApp:@"com.tappytaps.test" user:@"sarsonj@gmail.com" files:@[file1Path, file2Path]];
+    [[TSLogUploader instance] uploadFilesForApp:@"com.tappytaps.test" user:@"sarsonj@gmail.com" otherParams: nil files:@[file1Path, file2Path]];
 
 
 }
