@@ -29,7 +29,7 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 
 @implementation TSAppSupportSingleton {
     NSString *_appId;
-    AFHTTPClient *webClient;
+    JSONWebClient *webClient;
     NSTimeInterval latestMessagesDownload;
 }
 
@@ -51,7 +51,7 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 
 -(NSString *)getGlobalIdentifier {
     if ([[UIDevice currentDevice] respondsToSelector:@selector(identifierForVendor)]) {
-        NSUUID *uuid = [[ASIdentifierManager sharedManager] advertisingIdentifier];
+        NSUUID *uuid = [[UIDevice currentDevice] identifierForVendor];
         if (uuid != nil) {
             return [uuid UUIDString];
         } else{
@@ -196,7 +196,7 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
     [self.appSupportDelagate didReadMessage:messageId];
     NSMutableDictionary *params = [self messageHeader];
     params[@"messageId"] = messageId;
-    [webClient postPath:@"/messageReaded" parameters:params success:^(AFHTTPRequestOperation *operation, id responseObject) {
+    [webClient postPath:@"/messageReaded" parameters:params withTimeout: 3.0 success:^(AFHTTPRequestOperation *operation, id responseObject) {
     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
     }];
 }
@@ -204,7 +204,7 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 -(void)checkMaintananceMode:(TSMaintananceResultBlock)resultBlock {
     assert(webClient);
 
-    [webClient postPath:@"/maintenance" parameters: [self messageHeader] success:^(AFHTTPRequestOperation *operation, id responseObject) {
+    [webClient postPath:@"/maintenance" parameters: [self messageHeader] withTimeout: 3.0 success:^(AFHTTPRequestOperation *operation, id responseObject) {
         NSDictionary *ret = responseObject;
         if ([ret[@"maintenance"] isEqualToString:@"yes"]) {
             DDLogInfo(@"CheckManitananceWS: YES, %@", ret[@"message"]);
@@ -249,7 +249,7 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
         [launchParams addEntriesFromDictionary:[self messageHeader]];
         [launchParams addEntriesFromDictionary:self.additionalParams];
         DDLogInfo(@"App launched WS");
-        [webClient postPath:@"/appLaunched" parameters:launchParams success:^(AFHTTPRequestOperation *operation, id responseObject) {
+        [webClient postPath:@"/appLaunched" parameters:launchParams withTimeout: 3.0 success:^(AFHTTPRequestOperation *operation, id responseObject) {
             NSDictionary *responseDictionary = responseObject;
             if (responseDictionary != nil) {
                 latestMessagesDownload = [NSDate timeIntervalSinceReferenceDate];
