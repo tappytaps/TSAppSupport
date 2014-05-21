@@ -11,7 +11,7 @@
 #include <CommonCrypto/CommonDigest.h>
 #import <AFNetworking/AFHTTPRequestOperation.h>
 #import <CocoaLumberjack/DDLog.h>
-
+#import <NSNull.h>
 
 // In bytes
 #define FileHashDefaultChunkSizeForReadingData 4096
