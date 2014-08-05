@@ -59,7 +59,7 @@
                     _settings[key] = globalSettings[key];
                 }
             }
-            [[NSNotificationCenter defaultCenter] postNotification:NOTIFICATION_REMOTE_SETTINGS_UPDATED];
+            [[NSNotificationCenter defaultCenter] postNotificationName:NOTIFICATION_REMOTE_SETTINGS_UPDATED object:nil];
             callAfter(YES);
         } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
 //            self.settings = nil;
@@ -81,7 +81,7 @@
     for (NSString *key in perUserSettings.allKeys) {
         _settings[key] = perUserSettings[key];
     }
-    [[NSNotificationCenter defaultCenter] postNotification:NOTIFICATION_REMOTE_SETTINGS_UPDATED];
+    [[NSNotificationCenter defaultCenter] postNotificationName:NOTIFICATION_REMOTE_SETTINGS_UPDATED object:nil];
 }
 
 
