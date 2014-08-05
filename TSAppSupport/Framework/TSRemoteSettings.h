@@ -7,6 +7,8 @@
 
 #import <Foundation/Foundation.h>
 
+#define NOTIFICATION_REMOTE_SETTINGS_UPDATED    @"com.tappytaps.remotesettings.updated"
+
 @interface TSRemoteSettings : NSObject
 
 @property(nonatomic, copy) NSString *urlString;
