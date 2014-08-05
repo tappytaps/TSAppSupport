@@ -16,6 +16,7 @@
 #if TARGET_OS_IPHONE
 #import "AdSupport/ASIdentifierManager.h"
 #import "DDLog.h"
+#import "TSRemoteSettings.h"
 
 #endif
 #define LIB_VERSION 2
@@ -247,14 +248,18 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
     if ([self supportsUniqueIdentifier]) {
         NSMutableDictionary *launchParams = [self userStateDictionary];
         [launchParams addEntriesFromDictionary:[self messageHeader]];
-        [launchParams addEntriesFromDictionary:self.additionalParams];
+        launchParams[@"additionalParams"] = self.additionalParams;
         DDLogInfo(@"App launched WS");
-        [webClient postPath:@"/appLaunched" parameters:launchParams withTimeout: 3.0 success:^(AFHTTPRequestOperation *operation, id responseObject) {
+        [webClient postPath:@"/appLaunchedv2" parameters:launchParams withTimeout: 3.0 success:^(AFHTTPRequestOperation *operation, id responseObject) {
             NSDictionary *responseDictionary = responseObject;
-            if (responseDictionary != nil) {
+            // set latest message
+            if (responseDictionary[@"message"] != nil) {
                 latestMessagesDownload = [NSDate timeIntervalSinceReferenceDate];
-                self.currentMessage = responseDictionary;
+                self.currentMessage = responseDictionary[@"message"];
                 [self callDelegateForRecievedMessage:self.currentMessage];
+            }
+            if (responseDictionary[@"remoteSettings"] != nil) {
+                [[TSRemoteSettings sharedInstance] mergeWithPerUserSettings:responseDictionary[@"remoteSettings"]];
             }
         } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
             DDLogError(@"appLaunchedWS - %@", [error description]);

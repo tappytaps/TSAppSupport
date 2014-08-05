@@ -40,4 +40,5 @@ typedef void (^TSMaintananceResultBlock)(BOOL, NSString *);
 
 @property(nonatomic, strong) NSDictionary *currentMessage;
 @property(nonatomic, strong) NSDictionary *additionalParams;
+@property NSDictionary *perUserRemoteSettings;
 @end

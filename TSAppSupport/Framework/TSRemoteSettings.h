@@ -10,13 +10,15 @@
 @interface TSRemoteSettings : NSObject
 
 @property(nonatomic, copy) NSString *urlString;
-@property(strong) NSDictionary *settings;
+@property(strong, readonly) NSDictionary *settings;
 
 - (void)reload;
 
 - (void)reloadAndCallAfter:(void (^)(BOOL))emptyBlock;
 
 - (BOOL)bKey:(NSString *)name default:(BOOL)deflt;
+
+-(void)mergeWithPerUserSettings: (NSDictionary *)perUserSettings;
 
 +(TSRemoteSettings*)sharedInstance;
 

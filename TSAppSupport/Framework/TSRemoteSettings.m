@@ -16,7 +16,7 @@
 
 @implementation TSRemoteSettings {
     NSString *_urlString;
-    NSDictionary *_settings;
+    NSMutableDictionary *_settings;
     AFHTTPClient *webClient;
 }
 @synthesize urlString = _urlString;
@@ -26,6 +26,7 @@
 - (void)setAppUrl:(NSString *)appUrl {
     _appUrl = appUrl;
     webClient = [[JSONWebClient alloc] initWithBaseURL:[NSURL URLWithString:self.appUrl]];
+    _settings = [[NSMutableDictionary alloc] init];
 /*
     [webClient setParameterEncoding:AFJSONParameterEncoding];
     [webClient setDefaultHeader:@"Accept" value:@"application/json"];
@@ -52,10 +53,15 @@
 -(void)reloadAndCallAfter: (void(^)(BOOL))callAfter {
     if (self.urlString != nil) {
         [webClient getPath:self.urlString parameters:nil success:^(AFHTTPRequestOperation *operation, id responseObject) {
-            self.settings = responseObject;
+            NSDictionary *globalSettings = responseObject;
+            for (NSString *key in globalSettings.allKeys) {
+                if (!_settings[key]) {
+                    _settings[key] = globalSettings[key];
+                }
+            }
             callAfter(YES);
         } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-            self.settings = nil;
+//            self.settings = nil;
             NSLog(@"Error with loading remote settings %@", [error description]);
             callAfter(NO);
         }];
@@ -68,6 +74,12 @@
         toRet = [(self.settings)[name] boolValue];
     }
     return toRet;
+}
+
+- (void)mergeWithPerUserSettings:(NSDictionary *)perUserSettings {
+    for (NSString *key in perUserSettings.allKeys) {
+        _settings[key] = perUserSettings[key];
+    }
 }
 
 
