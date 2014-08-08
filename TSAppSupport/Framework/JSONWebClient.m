@@ -6,11 +6,14 @@
 
 #import "JSONWebClient.h"
 #import "AFJSONRequestOperation.h"
+#import "SecureCommunicationProtocol.h"
 
 
 @implementation JSONWebClient {
 
 }
+
+static NSObject<SecureCommunicationProtocol> *secureProcessor;
 
 - (id)initWithBaseURL:(NSURL *)url {
     self = [super initWithBaseURL:url];
@@ -22,6 +25,25 @@
     }
     return self;
 }
+
+
++ (void)setSecureProcessor:(NSObject <SecureCommunicationProtocol> *)pSecureProcessor {
+    secureProcessor = pSecureProcessor;
+}
+
++ (NSObject <SecureCommunicationProtocol> *)secureProcessor {
+    return secureProcessor;
+}
+
+
+- (AFHTTPRequestOperation *)HTTPRequestOperationWithRequest:(NSURLRequest *)urlRequest success:(void (^)(AFHTTPRequestOperation *operation, id responseObject))success failure:(void (^)(AFHTTPRequestOperation *operation, NSError *error))failure {
+    AFHTTPRequestOperation *operation =  [super HTTPRequestOperationWithRequest:urlRequest success:success failure:failure];
+    if (secureProcessor) {
+        [secureProcessor secureOperation:operation];
+    }
+    return operation;
+}
+
 
 - (void)postPath:(NSString *)path
       parameters:(NSDictionary *)parameters
@@ -35,6 +57,7 @@
     AFHTTPRequestOperation *operation = [self HTTPRequestOperationWithRequest:request success:success failure:failure];
     [self enqueueHTTPRequestOperation:operation];
 }
+
 
 
 
