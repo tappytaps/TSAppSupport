@@ -248,7 +248,9 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
     if ([self supportsUniqueIdentifier]) {
         NSMutableDictionary *launchParams = [self userStateDictionary];
         [launchParams addEntriesFromDictionary:[self messageHeader]];
-        launchParams[@"additionalParams"] = self.additionalParams;
+        if (self.additionalParams) {
+            launchParams[@"additionalParams"] = self.additionalParams;
+        }
         DDLogInfo(@"App launched WS");
         [webClient postPath:@"/appLaunchedv2" parameters:launchParams withTimeout: 3.0 success:^(AFHTTPRequestOperation *operation, id responseObject) {
             NSDictionary *responseDictionary = responseObject;
