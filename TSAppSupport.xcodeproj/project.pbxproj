@@ -33,7 +33,6 @@
 		6F6F10090C78DE026A2BBA41 /* TSAppHTMLMessageController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TSAppHTMLMessageController.h; sourceTree = "<group>"; };
 		6F6F10AE6FF95AF215A77AFE /* TSLogUploader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TSLogUploader.m; sourceTree = "<group>"; };
 		6F6F10DD3D293A167A6BD60C /* JSONWebClient.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JSONWebClient.m; sourceTree = "<group>"; };
-		6F6F12E56DAE5F025B6A17C3 /* SecureCommunicationProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SecureCommunicationProtocol.h; sourceTree = "<group>"; };
 		6F6F1576B75E47902CF86106 /* TSAppSupportSingleton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TSAppSupportSingleton.m; sourceTree = "<group>"; };
 		6F6F1CD51D64E9493EFF67CD /* TSAppSupportSingleton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TSAppSupportSingleton.h; sourceTree = "<group>"; };
 		6F6F1E956FCFAEAAC78EF005 /* TSAppHTMLMessageController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TSAppHTMLMessageController.m; sourceTree = "<group>"; };
@@ -91,7 +90,6 @@
 				6F6F1EDF35648D5FAECDF2B0 /* JSONWebClient.h */,
 				6F6F10AE6FF95AF215A77AFE /* TSLogUploader.m */,
 				6F6F1FD091AEB286B8ED54FD /* TSLogUploader.h */,
-				6F6F12E56DAE5F025B6A17C3 /* SecureCommunicationProtocol.h */,
 			);
 			path = Framework;
 			sourceTree = "<group>";

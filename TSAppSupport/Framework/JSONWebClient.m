@@ -6,7 +6,6 @@
 
 #import "JSONWebClient.h"
 #import "AFJSONRequestOperation.h"
-#import "SecureCommunicationProtocol.h"
 
 
 @implementation JSONWebClient {
@@ -38,9 +37,7 @@ static NSObject<SecureCommunicationProtocol> *secureProcessor;
 
 - (AFHTTPRequestOperation *)HTTPRequestOperationWithRequest:(NSURLRequest *)urlRequest success:(void (^)(AFHTTPRequestOperation *operation, id responseObject))success failure:(void (^)(AFHTTPRequestOperation *operation, NSError *error))failure {
     AFHTTPRequestOperation *operation =  [super HTTPRequestOperationWithRequest:urlRequest success:success failure:failure];
-    if (secureProcessor) {
-        [secureProcessor secureOperation:operation];
-    }
+    operation.SSLPinningMode = AFSSLPinningModeCertificate;
     return operation;
 }
 
