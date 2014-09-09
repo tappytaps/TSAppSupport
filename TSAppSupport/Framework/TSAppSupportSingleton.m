@@ -13,10 +13,11 @@
 #import "JSONWebClient.h"
 #include <sys/types.h>
 #include <sys/sysctl.h>
-#if TARGET_OS_IPHONE
-#import "AdSupport/ASIdentifierManager.h"
 #import "DDLog.h"
 #import "TSRemoteSettings.h"
+
+#if TARGET_OS_IPHONE
+#import "AdSupport/ASIdentifierManager.h"
 
 #endif
 #define LIB_VERSION 2

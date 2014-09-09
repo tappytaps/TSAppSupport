@@ -27,11 +27,6 @@
     _appUrl = appUrl;
     webClient = [[JSONWebClient alloc] initWithBaseURL:[NSURL URLWithString:self.appUrl]];
     _settings = [[NSMutableDictionary alloc] init];
-/*
-    [webClient setParameterEncoding:AFJSONParameterEncoding];
-    [webClient setDefaultHeader:@"Accept" value:@"application/json"];
-    [webClient registerHTTPOperationClass:[AFJSONRequestOperation class]];
-*/
 }
 
 +(TSRemoteSettings*)sharedInstance {
