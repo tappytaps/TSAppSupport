@@ -20,6 +20,8 @@
 
 
 
+
+
 @interface ViewController ()
 
 @end
@@ -52,7 +54,7 @@
     [[TSRemoteSettings sharedInstance] reloadAndCallAfter:^(BOOL b) {
         NSLog(@"Loaded? %i, Content of settings: %@",b,((TSRemoteSettings *) [TSRemoteSettings sharedInstance]).settings);
 
-        NSLog(@"minAudioDiffWhenWaiting: %i", [[TSRemoteSettings sharedInstance] iKey:@"networkOptimilizer.minVideoDiffWhenWaiting" default:10]);
+        NSLog(@"minAudioDiffWhenWaiting: %i", RS_INT(@"networkOptimilizer.minVideoDiffWhenWaiting", 10));
         NSLog(@"fastKeepAlive: %i", [[TSRemoteSettings sharedInstance] iKey:@"fastkeepalive" default:10]);
 
 

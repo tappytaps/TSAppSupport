@@ -9,6 +9,12 @@
 
 #define NOTIFICATION_REMOTE_SETTINGS_UPDATED    @"com.tappytaps.remotesettings.updated"
 
+
+// helper macros
+#define RS_INT(p_name, p_default)  [[TSRemoteSettings sharedInstance] iKey: p_name default:p_default]
+#define RS_BOOL(p_name, p_default)  [[TSRemoteSettings sharedInstance] bKey: p_name default:p_default]
+#define RS_STRING(p_name, p_default)  [[TSRemoteSettings sharedInstance] sKey: p_name default:p_default]
+
 @interface TSRemoteSettings : NSObject
 
 @property(nonatomic, copy) NSString *urlString;
