@@ -18,7 +18,9 @@
 
 - (void)reloadAndCallAfter:(void (^)(BOOL))emptyBlock;
 
-- (BOOL)bKey:(NSString *)name default:(BOOL)deflt;
+-(BOOL)bKey:(NSString *)name default:(BOOL)deflt;
+-(int)iKey:(NSString*)name default:(int)deflt;
+-(NSString*)sKey:(NSString*)name default:(NSString *)deflt;
 
 -(void)mergeWithPerUserSettings: (NSDictionary *)perUserSettings;
 

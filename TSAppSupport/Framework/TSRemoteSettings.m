@@ -64,13 +64,53 @@
     }
 }
 
+
+/**
+* complex key can use dots to traverse in hiearchy
+* like networkOptimilizer.minFrame
+*/
+-(NSObject *)getObjectByKey:(NSString *)complexKey {
+    NSArray *keys = [complexKey componentsSeparatedByString:@"."];
+    NSObject *currentObj = self.settings;
+    for (NSString *key in keys) {
+        if ([currentObj isKindOfClass:[NSDictionary class]]) {
+            NSDictionary *dict = currentObj;
+            currentObj = dict[key];
+        } else {
+            return nil;
+        }
+    }
+    return currentObj;
+};
+
 -(BOOL)bKey:(NSString*)name default:(BOOL)deflt {
     BOOL toRet = deflt;
-    if ((self.settings)[name]) {
-        toRet = [(self.settings)[name] boolValue];
+    NSObject *obj = [self getObjectByKey:name];
+    if ([obj isKindOfClass:[NSNumber class]]) {
+        toRet = [(NSNumber *)obj boolValue];
     }
     return toRet;
 }
+
+-(int)iKey:(NSString*)name default:(int)deflt {
+    int toRet = deflt;
+    NSObject *obj = [self getObjectByKey:name];
+    if ([obj isKindOfClass:[NSNumber class]]) {
+        toRet = [(NSNumber *)obj intValue];
+    }
+    return toRet;
+}
+
+-(NSString*)sKey:(NSString*)name default:(NSString*)deflt {
+    NSString* toRet = deflt;
+    NSObject *obj = [self getObjectByKey:name];
+    if ([obj isKindOfClass:[NSString class]]) {
+        toRet = (NSString *)obj;
+    }
+    return toRet;
+}
+
+
 
 - (void)mergeWithPerUserSettings:(NSDictionary *)perUserSettings {
     for (NSString *key in perUserSettings.allKeys) {

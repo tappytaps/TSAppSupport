@@ -28,6 +28,13 @@
 
 - (void)viewDidLoad
 {
+
+    NSURLCache *sharedCache = [[NSURLCache alloc] initWithMemoryCapacity:0
+                                                            diskCapacity:0
+                                                                diskPath:nil];
+    [NSURLCache setSharedURLCache:sharedCache];
+
+
     [super viewDidLoad];
 
     [[TSAppSupportSingleton sharedInstance] setAppUrl:API_URL];
@@ -40,10 +47,15 @@
     [[TSAppSupportSingleton sharedInstance] loadNewMessageFromServer];
 
     // server settings test
-    [[TSRemoteSettings sharedInstance] setAppUrl:@"https://babyam.tappytaps.com"];
-    [[TSRemoteSettings sharedInstance] setUrlString:@"/baby3gsettings.json"];
+    [[TSRemoteSettings sharedInstance] setAppUrl:@"http://appsupport.tappytaps.com"];
+    [[TSRemoteSettings sharedInstance] setUrlString:@"/remotesettings/baby3gsettings.35.json"];
     [[TSRemoteSettings sharedInstance] reloadAndCallAfter:^(BOOL b) {
         NSLog(@"Loaded? %i, Content of settings: %@",b,((TSRemoteSettings *) [TSRemoteSettings sharedInstance]).settings);
+
+        NSLog(@"minAudioDiffWhenWaiting: %i", [[TSRemoteSettings sharedInstance] iKey:@"networkOptimilizer.minVideoDiffWhenWaiting" default:10]);
+        NSLog(@"fastKeepAlive: %i", [[TSRemoteSettings sharedInstance] iKey:@"fastkeepalive" default:10]);
+
+
     }];
 
 
