@@ -30,4 +30,5 @@
 @property(nonatomic, strong) NSDictionary *messageParams;
 @property(nonatomic) BOOL embeddedInNavigationController;
 @property(nonatomic, strong) UIView *topEmptyView;
+@property (nonatomic, strong) UIColor *navigationBarColor;
 @end

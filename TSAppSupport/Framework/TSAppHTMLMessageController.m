@@ -90,7 +90,9 @@
     [super viewDidLayoutSubviews];
 
     if (self.view.origin.y == 0) {
-//        self.topEmptyView.backgroundColor = _navigationBar.backgroundColor;
+        if (self.navigationBarColor) {
+            self.topEmptyView.backgroundColor = self.navigationBarColor;
+        }
         self.topEmptyView.width = self.view.width;
         self.topEmptyView.height = 18;
     }
