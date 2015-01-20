@@ -9,5 +9,5 @@
 @interface TSAppHTMLMessageWithBar : UINavigationController
 
 
-
+- (id)initWithMessageParams:(NSDictionary *)dict;
 @end

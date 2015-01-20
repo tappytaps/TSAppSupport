@@ -12,9 +12,11 @@
 }
 
 -(id)initWithMessageParams:(NSDictionary *)dict {
-    TSAppHTMLMessageController *messageController = [[TSAppHTMLMessageController alloc] initWithMessageParams:dict];
-    messageController.embeddedInNavigationController = YES;
-    [self pushViewController:messageController animated:YES];
+    if ((self = [super init])) {
+        TSAppHTMLMessageController *messageController = [[TSAppHTMLMessageController alloc] initWithMessageParams:dict];
+        messageController.embeddedInNavigationController = YES;
+        [self pushViewController:messageController animated:YES];
+    }
     return self;
 }
 
