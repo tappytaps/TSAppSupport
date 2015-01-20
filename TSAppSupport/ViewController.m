@@ -53,13 +53,9 @@
     [[TSRemoteSettings sharedInstance] setUrlString:@"/remotesettings/baby3gsettings.35.json"];
     [[TSRemoteSettings sharedInstance] reloadAndCallAfter:^(BOOL b) {
         NSLog(@"Loaded? %i, Content of settings: %@",b,((TSRemoteSettings *) [TSRemoteSettings sharedInstance]).settings);
-
         NSLog(@"minAudioDiffWhenWaiting: %i", RS_INT(@"networkOptimilizer.minVideoDiffWhenWaiting", 10));
         NSLog(@"fastKeepAlive: %i", [[TSRemoteSettings sharedInstance] iKey:@"fastkeepalive" default:10]);
-
-
     }];
-
 
     // create temp files
     NSArray *paths = NSSearchPathForDirectoriesInDomains
@@ -72,8 +68,6 @@
     // logs test
     [[TSLogUploader instance] setServerUrl:LOGS_URL];
     [[TSLogUploader instance] uploadFilesForApp:@"com.tappytaps.test" user:@"sarsonj@gmail.com" otherParams: nil files:@[file1Path, file2Path]];
-
-
 }
 
 - (void)messageType:(NSString *)messageType withParams:(NSDictionary *)params {

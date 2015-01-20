@@ -21,21 +21,31 @@
     return self;
 }
 
-
 - (void)loadView {
     [super loadView];
     _loading = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
+    if (!self.embeddedInNavigationController) {
 
+    }
     _navigationBar = [[UINavigationBar alloc] initWithFrame:CGRectZero];
-    UINavigationItem *navItem = [UINavigationItem alloc];
+    UINavigationItem *navItem;
+    if (self.embeddedInNavigationController) {
+        navItem = self.navigationController.navigationItem;
+    } else {
+        navItem = [UINavigationItem alloc];
+    }
     navItem.title = @"";
     navItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Close",@"") style:UIBarButtonItemStyleDone target:self action:@selector(closeMessage:)];
     [_navigationBar pushNavigationItem:navItem animated:false];
 
     _webView = [[UIWebView alloc] initWithFrame:CGRectZero];
     _webView.delegate = self;
+    self.view.backgroundColor = [UIColor whiteColor];
     [self.view addSubview:_loading];
-    [self.view addSubview:_navigationBar];
+    if (!self.embeddedInNavigationController) {
+        [self.view addSubview:_navigationBar];
+    }
+
     [self.view addSubview:_webView];
     [self loadMessage];
 }
@@ -44,7 +54,6 @@
     _messageParams = messageParams;
     [self loadMessage];
 }
-
 
 - (void)loadMessage {
     _webView.hidden = YES;
@@ -75,12 +84,14 @@
     [[TSAppSupportSingleton sharedInstance] markMessageAsRead:self.messageParams[@"messageId"]];
 }
 
-
 - (void)viewDidLayoutSubviews{
     [super viewDidLayoutSubviews];
 
     [_navigationBar sizeToFit];
     _navigationBar.origin = CGPointZero;
+    if (self.embeddedInNavigationController) {
+        self.navigationBar.height = 0;
+    }
 
     _loading.centerX = self.view.width / 2;
     _loading.centerY = (self.view.height - _navigationBar.height) / 2 + _navigationBar.height;

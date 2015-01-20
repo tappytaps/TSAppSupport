@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>IDESourceControlProjectFavoriteDictionaryKey</key>
+	<false/>
+	<key>IDESourceControlProjectIdentifier</key>
+	<string>B46F0B54-A3FF-4F06-B498-C06B9225EE5D</string>
+	<key>IDESourceControlProjectName</key>
+	<string>TSAppSupport</string>
+	<key>IDESourceControlProjectOriginsDictionary</key>
+	<dict>
+		<key>B91F2796F97CB7A52973E76F96662CFBCDC01ACA</key>
+		<string>https://github.com/sarsonj/TSAppSupport.git</string>
+	</dict>
+	<key>IDESourceControlProjectPath</key>
+	<string>TSAppSupport.xcworkspace</string>
+	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
+	<dict>
+		<key>B91F2796F97CB7A52973E76F96662CFBCDC01ACA</key>
+		<string>..</string>
+	</dict>
+	<key>IDESourceControlProjectURL</key>
+	<string>https://github.com/sarsonj/TSAppSupport.git</string>
+	<key>IDESourceControlProjectVersion</key>
+	<integer>111</integer>
+	<key>IDESourceControlProjectWCCIdentifier</key>
+	<string>B91F2796F97CB7A52973E76F96662CFBCDC01ACA</string>
+	<key>IDESourceControlProjectWCConfigurations</key>
+	<array>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>B91F2796F97CB7A52973E76F96662CFBCDC01ACA</string>
+			<key>IDESourceControlWCCName</key>
+			<string>TSAppSupport</string>
+		</dict>
+	</array>
+</dict>
+</plist>
