@@ -29,4 +29,5 @@
 @property(nonatomic, strong) UIWebView *webView;
 @property(nonatomic, strong) NSDictionary *messageParams;
 @property(nonatomic) BOOL embeddedInNavigationController;
+@property(nonatomic, strong) UIView *topEmptyView;
 @end

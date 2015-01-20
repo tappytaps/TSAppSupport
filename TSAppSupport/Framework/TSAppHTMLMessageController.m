@@ -10,9 +10,7 @@
 #import "UIView+RMAdditions.h"
 #import "TSAppSupportSingleton.h"
 
-@implementation TSAppHTMLMessageController {
-    UIView *topEmptyView;
-}
+@implementation TSAppHTMLMessageController
 
 
 - (id)initWithMessageParams:(NSDictionary *)params {
@@ -29,8 +27,8 @@
 
     }
 
-    topEmptyView = [[UIView alloc] initWithFrame:CGRectZero];
-    [self.view addSubview:topEmptyView];
+    self.topEmptyView = [[UIView alloc] initWithFrame:CGRectZero];
+    [self.view addSubview:self.topEmptyView];
     _navigationBar = [[UINavigationBar alloc] initWithFrame:CGRectZero];
     UINavigationItem *navItem;
     if (self.embeddedInNavigationController) {
@@ -92,13 +90,13 @@
     [super viewDidLayoutSubviews];
 
     if (self.view.origin.y == 0) {
-        topEmptyView.backgroundColor = _navigationBar.backgroundColor;
-        topEmptyView.width = self.view.width;
-        topEmptyView.height = 18;
+//        self.topEmptyView.backgroundColor = _navigationBar.backgroundColor;
+        self.topEmptyView.width = self.view.width;
+        self.topEmptyView.height = 18;
     }
 
     [_navigationBar sizeToFit];
-    _navigationBar.origin = CGPointMake(0, topEmptyView.height);
+    _navigationBar.origin = CGPointMake(0, self.topEmptyView.height);
     if (self.embeddedInNavigationController) {
         self.navigationBar.height = 0;
     }
