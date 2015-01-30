@@ -22,6 +22,8 @@
 -(id)initWithMessageParams:(NSDictionary *)params;
 
 
+- (void)supportEmail:(NSString *)email;
+
 @property(nonatomic, strong) UIActivityIndicatorView *loading;
 @property(nonatomic, strong) UINavigationBar *navigationBar;
 @property(nonatomic, strong) UIBarButtonItem *closeButton;

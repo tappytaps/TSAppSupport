@@ -6,9 +6,14 @@
 //
 
 
+#import <CocoaLumberjack/DDLog.h>
+#import <Appirater/Appirater.h>
+//#import <LBYouTubeView/LBYouTubePlayerViewController.h>
 #import "TSAppHTMLMessageController.h"
 #import "UIView+RMAdditions.h"
 #import "TSAppSupportSingleton.h"
+
+#define SYTEM_PREFIX @"system-"
 
 @implementation TSAppHTMLMessageController
 
@@ -82,9 +87,41 @@
     [_loading stopAnimating];
     _loading.hidden = YES;
     webView.hidden = NO;
-    // mark as read
-    [[TSAppSupportSingleton sharedInstance] markMessageAsRead:self.messageParams[@"messageId"]];
+    if (![self.messageParams[@"type"] isEqualToString:@"internal"]) {
+        // mark as read
+        [[TSAppSupportSingleton sharedInstance] markMessageAsRead:self.messageParams[@"messageId"]];
+    }
 }
+
+-(void)supportEmail:(NSString*)email {
+
+}
+
+- (BOOL)webView:(UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType {
+    NSString *emailAddress = @"support@tappytaps.com";
+    if (navigationType == UIWebViewNavigationTypeLinkClicked) {
+        NSURL *url = [request URL];
+        if ([[url scheme] hasPrefix:@"mailto"]) {
+            [self supportEmail:emailAddress];
+            return NO;
+        }
+
+        // any URL can be pushed to iOS open URL when with prefix system-
+        if ([[url scheme] hasPrefix:SYTEM_PREFIX]) {
+            NSURL *newUrl = [NSURL URLWithString:[[url absoluteString] substringFromIndex:[SYTEM_PREFIX length]]];
+            if (![[UIApplication sharedApplication] openURL:newUrl]) {
+            };
+            return NO;
+        }
+
+        if (![[url scheme] hasPrefix:@"http"]) {
+                [[UIApplication sharedApplication] openURL:url];
+            return NO;
+        }
+    }
+    return YES;
+};
+
 
 - (void)viewDidLayoutSubviews{
     [super viewDidLayoutSubviews];
