@@ -7,7 +7,7 @@
 
 
 #import <CocoaLumberjack/DDLog.h>
-#import <Appirater/Appirater.h>
+//#import <Appirater/Appirater.h>
 //#import <LBYouTubeView/LBYouTubePlayerViewController.h>
 #import "TSAppHTMLMessageController.h"
 #import "UIView+RMAdditions.h"
