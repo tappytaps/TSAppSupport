@@ -17,7 +17,7 @@ Pod::Spec.new do |s|
   s.framework  = 'SystemConfiguration'
   s.dependency 'AFNetworking', '< 1.9'
   s.dependency 'RMCategories'
-  s.dependency 'MulticastDelegate', '= 0.0.2'
+  s.dependency 'MulticastDelegate', '= 1.0.0'
 
   s.requires_arc = true
 
