@@ -25,3 +25,4 @@ Pod::Spec.new do |s|
   s.dependency 'MulticastDelegate', '~ 1.0'
 
   s.requires_arc = true
+end
