@@ -7,7 +7,6 @@
 
 
 #import "TSAppSupportSingleton.h"
-#import "AFHTTPClient.h"
 #import "GCDMulticastDelegate.h"
 #import "AFJSONRequestOperation.h"
 #import "JSONWebClient.h"
@@ -127,6 +126,7 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 - (void)setAppUrl:(NSString *)appUrl {
     _appUrl = appUrl;
     webClient = [[JSONWebClient alloc] initWithBaseURL:[NSURL URLWithString:self.appUrl]];
+    [webClient.requestSerializer setTimeoutInterval:3.0];
 }
 
 
@@ -198,15 +198,15 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
     [self.appSupportDelagate didReadMessage:messageId];
     NSMutableDictionary *params = [self messageHeader];
     params[@"messageId"] = messageId;
-    [webClient postPath:@"/messageReaded" parameters:params withTimeout: 3.0 success:^(AFHTTPRequestOperation *operation, id responseObject) {
-    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+    [webClient POST:@"/messageReaded" parameters:params success:^(NSURLSessionTask *operation, id responseObject) {
+    } failure:^(NSURLSessionTask *operation, NSError *error) {
     }];
 }
 
 -(void)checkMaintananceMode:(TSMaintananceResultBlock)resultBlock {
     assert(webClient);
 
-    [webClient postPath:@"/maintenance" parameters: [self messageHeader] withTimeout: 3.0 success:^(AFHTTPRequestOperation *operation, id responseObject) {
+    [webClient POST:@"/maintenance" parameters: [self messageHeader]  success:^(NSURLSessionTask *operation, id responseObject) {
         NSDictionary *ret = responseObject;
         if ([ret[@"maintenance"] isEqualToString:@"yes"]) {
             DDLogInfo(@"CheckManitananceWS: YES, %@", ret[@"message"]);
@@ -215,7 +215,7 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
             DDLogInfo(@"CheckManitananceWS: NO");
             resultBlock(NO, @"");
         }
-    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+    } failure:^(NSURLSessionTask *operation, NSError *error) {
         DDLogError(@"CheckManitananceWS: err %@", [error description]);
         resultBlock(NO, @"");
     }
@@ -253,7 +253,7 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
             launchParams[@"additionalParams"] = self.additionalParams;
         }
         DDLogInfo(@"App launched WS");
-        [webClient postPath:@"/appLaunchedv2" parameters:launchParams withTimeout: 3.0 success:^(AFHTTPRequestOperation *operation, id responseObject) {
+        [webClient POST:@"/appLaunchedv2" parameters:launchParams success:^(NSURLSessionTask *operation, id responseObject) {
             NSDictionary *responseDictionary = responseObject;
             // set latest message
             if (responseDictionary[@"message"] != nil) {
@@ -264,7 +264,7 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
             if (responseDictionary[@"remoteSettings"] != nil) {
                 [[TSRemoteSettings sharedInstance] mergeWithPerUserSettings:responseDictionary[@"remoteSettings"]];
             }
-        } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+        } failure:^(NSURLSessionTask *operation, NSError *error) {
             DDLogError(@"appLaunchedWS - %@", [error description]);
         }];
     } else {

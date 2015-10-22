@@ -8,16 +8,13 @@
 #import "TSRemoteSettings.h"
 
 
-#import "AFHTTPRequestOperation.h"
-#import "AFHTTPClient.h"
-#import "AFJSONRequestOperation.h"
 #import "JSONWebClient.h"
 
 
 @implementation TSRemoteSettings {
     NSString *_urlString;
     NSMutableDictionary *_settings;
-    AFHTTPClient *webClient;
+    JSONWebClient *webClient;
 }
 @synthesize urlString = _urlString;
 @synthesize settings = _settings;
@@ -47,7 +44,7 @@
 
 -(void)reloadAndCallAfter: (void(^)(BOOL))callAfter {
     if (self.urlString != nil) {
-        [webClient getPath:self.urlString parameters:nil success:^(AFHTTPRequestOperation *operation, id responseObject) {
+        [webClient GET:self.urlString parameters:nil success:^(NSURLSessionTask *operation, id responseObject) {
             NSDictionary *globalSettings = responseObject;
             for (NSString *key in globalSettings.allKeys) {
                 if (!_settings[key]) {
@@ -56,7 +53,7 @@
             }
             [[NSNotificationCenter defaultCenter] postNotificationName:NOTIFICATION_REMOTE_SETTINGS_UPDATED object:nil];
             callAfter(YES);
-        } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+        } failure:^(NSURLSessionTask *operation, NSError *error) {
 //            self.settings = nil;
             NSLog(@"Error with loading remote settings %@", [error description]);
             callAfter(NO);

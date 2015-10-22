@@ -9,7 +9,6 @@
 #include <stdint.h>
 #include <stdio.h>
 #include <CommonCrypto/CommonDigest.h>
-#import <AFNetworking/AFHTTPRequestOperation.h>
 #import <CocoaLumberjack/DDLog.h>
 #import <NSNull.h>
 
@@ -106,7 +105,7 @@ CFStringRef FileMD5HashCreateWithPath(CFStringRef filePath,
 // Cryptography
 
 @implementation TSLogUploader {
-    AFHTTPClient *webClient;
+    JSONWebClient *webClient;
 }
 - (void)setServerUrl:(NSString *)serverUrl {
     _serverUrl = [serverUrl mutableCopy];
@@ -162,7 +161,10 @@ CFStringRef FileMD5HashCreateWithPath(CFStringRef filePath,
             @"user": [NSNull nullIfObjectIsNil:user],
             @"files": filesJson
     };
-    [webClient postPath:@"checkUpload" parameters:uploadJson success:^(AFHTTPRequestOperation *operation, id responseObject) {
+    
+    
+    
+    [webClient POST:@"checkUpload" parameters:uploadJson success:^(NSURLSessionTask *operation, id responseObject) {
         NSDictionary *response = responseObject;
         DDLogVerbose(@"Files to upload %@", response[@"files"]);
         if (response[@"files"] != nil && [response[@"files"] count] > 0) {
@@ -172,12 +174,10 @@ CFStringRef FileMD5HashCreateWithPath(CFStringRef filePath,
                 NSString* filePath = filesDictionary[file];
                 NSData *fileData = [NSData dataWithContentsOfFile:filePath];
                 if (fileData != nil) {
-                    NSMutableURLRequest *request = [webClient multipartFormRequestWithMethod:@"POST" path:@"upload" parameters: @{@"appId": appId, @"user": [NSNull nullIfObjectIsNil:user]} constructingBodyWithBlock: ^(id <AFMultipartFormData>formData) {
-                        [formData appendPartWithFileData:fileData name:@"fileToUpload" fileName:file mimeType:@"text/plain"];
-                    }];
-                    AFHTTPRequestOperation *operation = [[AFHTTPRequestOperation alloc] initWithRequest:request];
                     NSString __block *blockFile  = file;
-                    [operation setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject) {
+                    [webClient POST:@"upload" parameters: @{@"appId": appId, @"user": [NSNull nullIfObjectIsNil:user]} constructingBodyWithBlock:^(id<AFMultipartFormData>  _Nonnull formData) {
+                                    [formData appendPartWithFileData:fileData name:@"fileToUpload" fileName:file mimeType:@"text/plain"];
+                    } success:^(NSURLSessionDataTask * _Nonnull task, id  _Nonnull responseObject) {
                         DDLogVerbose(@"File uploaded: %@", blockFile);
                         @synchronized (self) {
                             filesToUpload--;
@@ -186,7 +186,8 @@ CFStringRef FileMD5HashCreateWithPath(CFStringRef filePath,
                                 DDLogVerbose(@"Upload - all done");
                             }
                         }
-                    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+
+                    } failure:^(NSURLSessionDataTask * _Nonnull task, NSError * _Nonnull error) {
                         DDLogError(@"Upload failure: %@", [error description]);
                         @synchronized (self) {
                             filesToUpload--;
@@ -196,7 +197,6 @@ CFStringRef FileMD5HashCreateWithPath(CFStringRef filePath,
                             }
                         }
                     }];
-                    [webClient enqueueHTTPRequestOperation:operation];
                 } else {
                     @synchronized (self) {
                         filesToUpload--;
@@ -205,7 +205,7 @@ CFStringRef FileMD5HashCreateWithPath(CFStringRef filePath,
 
             }
         }
-    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+    } failure:^(NSURLSessionTask *operation, NSError *error) {
         // when error. do nothing
         DDLogError(@"Error when calling upload WS function %@", [error description]);
         @synchronized (self) {
