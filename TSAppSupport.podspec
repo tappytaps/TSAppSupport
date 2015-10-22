@@ -25,7 +25,7 @@ Pod::Spec.new do |s|
     'TSAppSupport/Framework/TSAppHTMLMessageWithBar.*']
 
   s.framework  = 'SystemConfiguration'
-  s.dependency 'AFNetworking', '< 1.9'
+  s.dependency 'AFNetworking', '~> 3.0'
   s.ios.dependency 'RMCategories'
   s.dependency 'MulticastDelegate', '~> 1.0'
 
