@@ -14,12 +14,16 @@ Pod::Spec.new do |s|
   s.osx.frameworks = 'CoreServices', 'SystemConfiguration', 'Security'
 
   s.ios.deployment_target = '5.0'
+  s.tvos.deployment_target = '9.0'
 
   s.source       = { :git => "https://github.com/sarsonj/TSAppSupport.git", :tag => '0.0.16'}
   s.source_files  = 'TSAppSupport/Framework/*.{h,m}'
   s.exclude_files = 'Classes/Exclude'
   s.osx.exclude_files = ['TSAppSupport/Framework/TSAppHTMLMessageController.*',
     'TSAppSupport/Framework/TSAppHTMLMessageWithBar.*']
+  s.tvos.exclude_files = ['TSAppSupport/Framework/TSAppHTMLMessageController.*',
+    'TSAppSupport/Framework/TSAppHTMLMessageWithBar.*']
+
   s.framework  = 'SystemConfiguration'
   s.dependency 'AFNetworking', '< 1.9'
   s.ios.dependency 'RMCategories'
