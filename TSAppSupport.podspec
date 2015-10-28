@@ -10,10 +10,10 @@ Pod::Spec.new do |s|
   s.homepage     = "http://tappytaps.com"
   s.license      = 'GPL'
   s.author       = { "Jindrich Sarson" => "jindra@tappytaps.com" }
-  s.osx.deployment_target = '10.7'
+  s.osx.deployment_target = '10.8'
   s.osx.frameworks = 'CoreServices', 'SystemConfiguration', 'Security'
 
-  s.ios.deployment_target = '5.0'
+  s.ios.deployment_target = '7.0'
   s.tvos.deployment_target = '9.0'
 
   s.source       = { :git => "https://github.com/sarsonj/TSAppSupport.git", :tag => '0.0.16'}
