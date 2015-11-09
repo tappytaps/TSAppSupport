@@ -16,6 +16,7 @@
     self = [super initWithBaseURL:url];
     if (self) {
         self.responseSerializer = [AFJSONResponseSerializer serializer];
+        self.requestSerializer = [AFJSONRequestSerializer serializer];
         AFSecurityPolicy *securityPolicy = [AFSecurityPolicy policyWithPinningMode:AFSSLPinningModeCertificate];
         securityPolicy.allowInvalidCertificates = YES;
         securityPolicy.validatesDomainName = YES;
