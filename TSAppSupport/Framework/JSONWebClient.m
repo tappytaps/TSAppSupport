@@ -16,7 +16,17 @@
     self = [super initWithBaseURL:url];
     if (self) {
         self.responseSerializer = [AFJSONResponseSerializer serializer];
-        [self setSecurityPolicy:[AFSecurityPolicy policyWithPinningMode:AFSSLPinningModeCertificate]];
+        AFSecurityPolicy *securityPolicy = [AFSecurityPolicy policyWithPinningMode:AFSSLPinningModeCertificate];
+        securityPolicy.allowInvalidCertificates = YES;
+        securityPolicy.validatesDomainName = YES;
+        [self setSecurityPolicy:securityPolicy];
+
+        
+        
+//        [self setSecurityPolicy:[AFSecurityPolicy policyWithPinningMode:AFSSLPinningModeCertificate]];
+//        securityPolicy.allowInvalidCertificates = YES;
+//        securityPolicy.validatesDomainName = YES;
+
     }
     return self;
 }
