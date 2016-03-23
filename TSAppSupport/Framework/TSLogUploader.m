@@ -10,7 +10,7 @@
 #include <stdio.h>
 #include <CommonCrypto/CommonDigest.h>
 #import <CocoaLumberjack/DDLog.h>
-#import <NSNull.h>
+#import "NSNull.h"
 
 // In bytes
 #define FileHashDefaultChunkSizeForReadingData 4096
@@ -161,9 +161,9 @@ CFStringRef FileMD5HashCreateWithPath(CFStringRef filePath,
             @"user": [NSNull nullIfObjectIsNil:user],
             @"files": filesJson
     };
-    
-    
-    
+
+
+
     [webClient POST:@"checkUpload" parameters:uploadJson success:^(NSURLSessionTask *operation, id responseObject) {
         NSDictionary *response = responseObject;
         DDLogVerbose(@"Files to upload %@", response[@"files"]);
@@ -217,6 +217,3 @@ CFStringRef FileMD5HashCreateWithPath(CFStringRef filePath,
 }
 
 @end
-
-
-
