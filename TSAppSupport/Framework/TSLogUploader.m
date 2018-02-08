@@ -10,7 +10,6 @@
 #include <stdio.h>
 #include <CommonCrypto/CommonDigest.h>
 #import <CocoaLumberjack/DDLog.h>
-#import "NSNull.h"
 
 // In bytes
 #define FileHashDefaultChunkSizeForReadingData 4096
@@ -158,7 +157,7 @@ CFStringRef FileMD5HashCreateWithPath(CFStringRef filePath,
     }
     NSDictionary *uploadJson = @{
             @"appId": appId,
-            @"user": [NSNull nullIfObjectIsNil:user],
+            @"user": user?: [NSNull null],
             @"files": filesJson
     };
 
@@ -175,7 +174,7 @@ CFStringRef FileMD5HashCreateWithPath(CFStringRef filePath,
                 NSData *fileData = [NSData dataWithContentsOfFile:filePath];
                 if (fileData != nil) {
                     NSString __block *blockFile  = file;
-                    [webClient POST:@"upload" parameters: @{@"appId": appId, @"user": [NSNull nullIfObjectIsNil:user]} constructingBodyWithBlock:^(id<AFMultipartFormData>  _Nonnull formData) {
+                    [webClient POST:@"upload" parameters: @{@"appId": appId, @"user": user?: [NSNull null]} constructingBodyWithBlock:^(id<AFMultipartFormData>  _Nonnull formData) {
                                     [formData appendPartWithFileData:fileData name:@"fileToUpload" fileName:file mimeType:@"text/plain"];
                     } success:^(NSURLSessionDataTask * _Nonnull task, id  _Nonnull responseObject) {
                         DDLogVerbose(@"File uploaded: %@", blockFile);
