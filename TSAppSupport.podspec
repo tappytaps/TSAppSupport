@@ -29,7 +29,7 @@ Pod::Spec.new do |s|
   s.ios.dependency 'RMCategories'
   s.dependency 'MulticastDelegate', '~> 1.0'
   s.dependency 'CocoaLumberjack'
-  s.dependency 'FoundationExtension/FoundationExtension'
+#  s.dependency 'FoundationExtension/FoundationExtension'
 
   s.requires_arc = true
 end
