@@ -9,6 +9,7 @@
 #include <stdint.h>
 #include <stdio.h>
 #include <CommonCrypto/CommonDigest.h>
+#import <CocoaLumberjack/CocoaLumberjack.h>
 #import <CocoaLumberjack/DDLog.h>
 
 // In bytes
