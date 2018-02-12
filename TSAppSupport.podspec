@@ -10,10 +10,10 @@ Pod::Spec.new do |s|
   s.homepage     = "http://tappytaps.com"
   s.license      = 'GPL'
   s.author       = { "Jindrich Sarson" => "jindra@tappytaps.com" }
-  s.osx.deployment_target = '10.8'
+  s.osx.deployment_target = '10.10'
   s.osx.frameworks = 'CoreServices', 'SystemConfiguration', 'Security'
 
-  s.ios.deployment_target = '7.0'
+  s.ios.deployment_target = '8.0'
   s.tvos.deployment_target = '9.0'
 
   s.source       = { :git => "https://github.com/sarsonj/TSAppSupport.git", :tag => '0.0.16'}
@@ -25,11 +25,10 @@ Pod::Spec.new do |s|
     'TSAppSupport/Framework/TSAppHTMLMessageWithBar.*']
 
   s.framework  = 'SystemConfiguration'
-  s.dependency 'AFNetworking', '~> 3.0.0'
+  s.dependency 'AFNetworking'
   s.ios.dependency 'RMCategories'
   s.dependency 'MulticastDelegate', '~> 1.0'
   s.dependency 'CocoaLumberjack'
-#  s.dependency 'FoundationExtension/FoundationExtension'
 
   s.requires_arc = true
 end

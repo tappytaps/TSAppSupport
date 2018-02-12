@@ -25,7 +25,7 @@
 
 #define UPDATE_MESSAGES_EVERY 3600.0 * 0.25
 
-static const int ddLogLevel = LOG_LEVEL_INFO;
+static const int ddLogLevel = DDLogLevelInfo;
 
 @implementation TSAppSupportSingleton {
     NSString *_appId;

@@ -15,9 +15,9 @@
 #define FileHashDefaultChunkSizeForReadingData 4096
 
 #ifdef DEBUG
-static int ddLogLevel = LOG_LEVEL_VERBOSE;
+static int ddLogLevel = DDLogLevelVerbose;
 #else
-static int ddLogLevel = LOG_LEVEL_WARN;
+static int ddLogLevel = DDLogLevelWarn;
 #endif
 
 // Function
