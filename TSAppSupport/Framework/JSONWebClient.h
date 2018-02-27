@@ -5,7 +5,7 @@
 
 
 #import <Foundation/Foundation.h>
-#import "AFHTTPSessionManager.h"
+@import AFNetworking;
 
 @protocol SecureCommunicationProtocol;
 

@@ -8,7 +8,7 @@
 
 #import <Foundation/Foundation.h>
 
-#import "GCDMulticastDelegate.h"
+@import MulticastDelegate;
 
 
 typedef void (^TSMaintananceResultBlock)(BOOL, NSString *);

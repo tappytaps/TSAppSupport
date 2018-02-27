@@ -7,7 +7,7 @@
 
 
 #import "TSAppSupportSingleton.h"
-#import "GCDMulticastDelegate.h"
+@import MulticastDelegate;
 #import "JSONWebClient.h"
 #include <sys/types.h>
 #include <sys/sysctl.h>
