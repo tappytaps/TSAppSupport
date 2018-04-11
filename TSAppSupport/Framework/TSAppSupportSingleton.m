@@ -8,11 +8,10 @@
 
 #import "TSAppSupportSingleton.h"
 @import MulticastDelegate;
+@import CocoaLumberjack;
 #import "JSONWebClient.h"
 #include <sys/types.h>
 #include <sys/sysctl.h>
-#import "DDLog.h"
-#import <CocoaLumberjack/CocoaLumberjack.h>
 #import "TSRemoteSettings.h"
 
 #if TARGET_OS_IPHONE
