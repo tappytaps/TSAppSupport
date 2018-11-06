@@ -203,6 +203,8 @@ CFStringRef FileMD5HashCreateWithPath(CFStringRef filePath,
                 }
 
             }
+        } else {
+            self.uploading = NO;
         }
     } failure:^(NSURLSessionTask *operation, NSError *error) {
         // when error. do nothing
