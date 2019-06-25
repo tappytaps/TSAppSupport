@@ -20,7 +20,9 @@
         AFSecurityPolicy *securityPolicy = [AFSecurityPolicy policyWithPinningMode:AFSSLPinningModeCertificate];
         securityPolicy.allowInvalidCertificates = YES;
         securityPolicy.validatesDomainName = YES;
-        [self setSecurityPolicy:securityPolicy];
+        if ([url.scheme isEqualToString:@"https"]) {
+            [self setSecurityPolicy:securityPolicy];
+        }
 
         
         
