@@ -33,10 +33,9 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
     NSTimeInterval latestMessagesDownload;
 }
 
-
 #if TARGET_OS_IPHONE
 
--(NSString *)getUniqueIdentifier {
+- (NSString *)getUniqueIdentifier {
     if ([[UIDevice currentDevice] respondsToSelector:@selector(identifierForVendor)]) {
         NSUUID *uuid = [[UIDevice currentDevice] identifierForVendor];
         if (uuid != nil) {
@@ -49,7 +48,7 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
     }
 }
 
--(NSString *)getGlobalIdentifier {
+- (NSString *)getGlobalIdentifier {
     if ([[UIDevice currentDevice] respondsToSelector:@selector(identifierForVendor)]) {
         NSUUID *uuid = [[UIDevice currentDevice] identifierForVendor];
         if (uuid != nil) {
@@ -62,13 +61,11 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
     }
 }
 
-
--(BOOL)supportsUniqueIdentifier {
+- (BOOL)supportsUniqueIdentifier {
     return  [[UIDevice currentDevice] respondsToSelector:@selector(identifierForVendor)];
 }
 
 #else
-
 
 -(NSString *)getUniqueIdentifier {
     io_service_t    platformExpert = IOServiceGetMatchingService(kIOMasterPortDefault,
@@ -96,12 +93,9 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
     return ([self getUniqueIdentifier] != NULL);
 }
 
-
-
 #endif
 
-
-+(TSAppSupportSingleton*)sharedInstance {
++ (TSAppSupportSingleton*)sharedInstance {
     static TSAppSupportSingleton *sharedMyInstance = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
@@ -110,12 +104,10 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
     return sharedMyInstance;
 }
 
-
-
 - (id)init {
     self = [super init];
     if (self) {
-        self.appSupportDelagate = (GCDMulticastDelegate <TSAppSupportDelegate> *)[[GCDMulticastDelegate alloc] init];
+        self.delegate = (GCDMulticastDelegate <TSAppSupportDelegate> *)[[GCDMulticastDelegate alloc] init];
         [self setAppUrl:API_URL];
         latestMessagesDownload = 0;
     }
@@ -130,8 +122,7 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 
 
 #if TARGET_OS_IPHONE
-- (NSString *) platform
-{
+- (NSString *) platform {
     size_t size;
     sysctlbyname("hw.machine", NULL, &size, NULL, 0);
     char *machine = malloc(size);
@@ -159,10 +150,7 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 
 #endif
 
-
-
-
--(NSMutableDictionary *)userStateDictionary {
+- (NSMutableDictionary *)userStateDictionary {
     NSMutableDictionary *toRet = [NSMutableDictionary dictionary];
     toRet[@"version"] = EMPTY_WHEN_NULL([[NSBundle mainBundle] objectForInfoDictionaryKey: @"CFBundleShortVersionString"]);
     toRet[@"libVersion"] = @LIB_VERSION;
@@ -177,7 +165,7 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
     return toRet;
 }
 
--(NSMutableDictionary *)messageHeader {
+- (NSMutableDictionary *)messageHeader {
     return [NSMutableDictionary dictionaryWithDictionary:
              @{@"vendorId": EMPTY_WHEN_NULL([self getUniqueIdentifier]),
              @"globalId": EMPTY_WHEN_NULL([self getGlobalIdentifier]),
@@ -188,24 +176,60 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
     [self launchWithAppId:appId additionalVariables:nil];
 }
 
+- (void)pinMessage:(TSAppSupportMessage *)message {
+    if (message.pinned) {
+        return;
+    }
+    [message pinUntil:[NSDate dateWithTimeIntervalSinceNow:60*60*24*3]]; // 3 days
+    
+    self.currentMessage = message;
+    
+    NSData *messageData = [NSKeyedArchiver archivedDataWithRootObject:message];
+    [[NSUserDefaults standardUserDefaults] setObject:messageData forKey:@"pinnedMessage"];
+    
+    [self notifyDelegateAboutCurrentMessageUpdate];
+    [self markMessageAsReadOnServer:message];
+}
 
+- (void)unpinMessage {
+    self.currentMessage = nil;
+    [self deletePinnedMessage];
+    [self notifyDelegateAboutCurrentMessageUpdate];
+}
 
--(void)markMessageAsRead:(NSString *)messageId {
-    DDLogInfo(@"MessageReadWS: %@ was marked as read", messageId);
+- (TSAppSupportMessage *)getPinnedMessage {
+    NSData *messageData = [[NSUserDefaults standardUserDefaults] objectForKey:@"pinnedMessage"];
+    if (messageData != nil) {
+        return [NSKeyedUnarchiver unarchiveObjectWithData:messageData];
+    }
+    return nil;
+}
+
+- (void)deletePinnedMessage {
+    [[NSUserDefaults standardUserDefaults] removeObjectForKey:@"pinnedMessage"];
+}
+
+- (void)markMessageAsRead:(TSAppSupportMessage *)message {
+    DDLogInfo(@"MessageReadWS: %@ was marked as read", message.messageId);
     assert(webClient);
     self.currentMessage = nil;
-    [self.appSupportDelagate didReadMessage:messageId];
+    [self deletePinnedMessage];
+    [self notifyDelegateAboutCurrentMessageUpdate];
+    [self markMessageAsReadOnServer:message];
+}
+
+- (void)markMessageAsReadOnServer:(TSAppSupportMessage *)message {
     NSMutableDictionary *params = [self messageHeader];
-    params[@"messageId"] = messageId;
+    params[@"messageId"] = message.messageId;
     [webClient POST:@"/messageReaded" parameters:params success:^(NSURLSessionTask *operation, id responseObject) {
     } failure:^(NSURLSessionTask *operation, NSError *error) {
     }];
 }
 
--(void)checkMaintananceMode:(TSMaintananceResultBlock)resultBlock {
+- (void)checkMaintananceMode:(TSMaintananceResultBlock)resultBlock {
     assert(webClient);
 
-    [webClient POST:@"/maintenance" parameters: [self messageHeader]  success:^(NSURLSessionTask *operation, id responseObject) {
+    [webClient POST:@"/maintenance" parameters: [self messageHeader] success:^(NSURLSessionTask *operation, id responseObject) {
         NSDictionary *ret = responseObject;
         if ([ret[@"maintenance"] isEqualToString:@"yes"]) {
             DDLogInfo(@"CheckManitananceWS: YES, %@", ret[@"message"]);
@@ -217,34 +241,40 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
     } failure:^(NSURLSessionTask *operation, NSError *error) {
         DDLogError(@"CheckManitananceWS: err %@", [error description]);
         resultBlock(NO, @"");
-    }
-    ];
+    }];
 }
 
--(void)launchWithAppId:(NSString *)appId additionalVariables:(NSDictionary *)additional {
+- (void)launchWithAppId:(NSString *)appId additionalVariables:(NSDictionary *)additional {
     self.additionalParams = additional;
     _appId = appId;
 }
 
--(void)callDelegateForRecievedMessage:(NSDictionary *)message {
-    if ([message objectForKey:@"type"] != nil && [message objectForKey:@"params"] != nil) {
-        [self.appSupportDelagate messageType:self.currentMessage[@"type"] withParams:self.currentMessage[@"params"]];
-    }
+- (void)notifyDelegateAboutCurrentMessageUpdate {
+    [self.delegate appSupportSingleton:self didUpdateCurrentMessage:self.currentMessage];
 }
 
--(void)cachedLoadNewMessages {
+- (void)cachedLoadNewMessages {
     NSTimeInterval now = [NSDate timeIntervalSinceReferenceDate];
     if (((now - latestMessagesDownload) < UPDATE_MESSAGES_EVERY) && (self.currentMessage != nil)) {
-        [self callDelegateForRecievedMessage:self.currentMessage];
+        [self notifyDelegateAboutCurrentMessageUpdate];
     } else{
         [self loadNewMessageFromServer];
     }
 }
 
-
-
--(void)loadNewMessageFromServer {
+- (void)loadNewMessageFromServer {
+    NSDate *now = [NSDate date];
+    TSAppSupportMessage *pinnedMessage = [self getPinnedMessage];
+    if (pinnedMessage != nil && [pinnedMessage.pinnedUntil compare:now] == NSOrderedDescending) {
+        NSLog(@"PINNED UNTIL: %@", pinnedMessage.pinnedUntil);
+        self.currentMessage = pinnedMessage;
+        [self notifyDelegateAboutCurrentMessageUpdate];
+        return;
+    }
+    [self deletePinnedMessage];
+    
     assert(webClient);
+    
     if ([self supportsUniqueIdentifier]) {
         NSMutableDictionary *launchParams = [self userStateDictionary];
         [launchParams addEntriesFromDictionary:[self messageHeader]];
@@ -257,8 +287,9 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
             // set latest message
             if (responseDictionary[@"message"] != nil) {
                 latestMessagesDownload = [NSDate timeIntervalSinceReferenceDate];
-                self.currentMessage = responseDictionary[@"message"];
-                [self callDelegateForRecievedMessage:self.currentMessage];
+                TSAppSupportMessage *message = [[TSAppSupportMessage alloc] initWithDictionary:responseDictionary[@"message"]];
+                self.currentMessage = message;
+                [self notifyDelegateAboutCurrentMessageUpdate];
             }
             if (responseDictionary[@"remoteSettings"] != nil) {
                 [[TSRemoteSettings sharedInstance] mergeWithPerUserSettings:responseDictionary[@"remoteSettings"]];
@@ -271,6 +302,5 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
         // messages not supported on <iOS6
     }
 }
-
 
 @end

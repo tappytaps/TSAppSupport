@@ -5,40 +5,39 @@
 // To change the template use AppCode | Preferences | File Templates.
 //
 
-
 #import <Foundation/Foundation.h>
-
 #import "GCDMulticastDelegate.h"
-
+#import "TSAppSupportMessage.h"
 
 typedef void (^TSMaintananceResultBlock)(BOOL, NSString *);
 
+@class TSAppSupportSingleton;
+
 @protocol TSAppSupportDelegate
-    -(void)messageType:(NSString *)messageType withParams:(NSDictionary *)params;
-    -(void)didReadMessage:(NSString *)messageId;
+
+- (void)appSupportSingleton:(TSAppSupportSingleton *)appSupportSingleton didUpdateCurrentMessage:(TSAppSupportMessage *)message;
+
 @end
 
 @interface TSAppSupportSingleton : NSObject
+
++ (TSAppSupportSingleton*)sharedInstance;
+
 - (BOOL)supportsUniqueIdentifier;
-
-+(TSAppSupportSingleton*)sharedInstance;
-
 - (void)launchWithAppId:(NSString *)appId additionalVariables:(NSDictionary *)additional;
-
 - (void)cachedLoadNewMessages;
-
-- (void)loadNewMessageFromServer;
-
 - (void)launchWithAppId:(NSString *)appId;
-
-- (void)markMessageAsRead:(NSString *)messageId;
-
+- (void)loadNewMessageFromServer;
+- (void)pinMessage:(TSAppSupportMessage *)message;
+- (void)unpinMessage;
+- (void)markMessageAsRead:(TSAppSupportMessage *)message;
 - (void)checkMaintananceMode:(TSMaintananceResultBlock)resultBlock;
 
-@property GCDMulticastDelegate<TSAppSupportDelegate> *appSupportDelagate;
+@property GCDMulticastDelegate<TSAppSupportDelegate> *delegate;
 @property NSString *appUrl;
 
-@property(nonatomic, strong) NSDictionary *currentMessage;
+@property(nonatomic, strong) TSAppSupportMessage *currentMessage;
 @property(nonatomic, strong) NSDictionary *additionalParams;
 @property NSDictionary *perUserRemoteSettings;
+
 @end
