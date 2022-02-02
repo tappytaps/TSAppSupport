@@ -180,7 +180,7 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
     if (message.pinned) {
         return;
     }
-    [message pinUntil:[NSDate dateWithTimeIntervalSinceNow:60*60*24*3]]; // 3 days
+    [message pinUntil:[NSDate dateWithTimeIntervalSinceNow:60*60*24*10]]; // 10 days
     
     self.currentMessage = message;
     
